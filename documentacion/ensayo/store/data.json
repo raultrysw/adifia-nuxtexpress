@@ -1,0 +1,23 @@
+{
+  "logged": false,
+  "user": null,
+  "title": "Bienvenido",
+  "lists": {
+    "Enlaces": [
+      {"text": "Página del ayuntamiento", "url": "http://www.alicante.es/es"},
+      {"text": "Cocemfe", "url": "https://cocemfealicante.org"}
+    ],
+    "Documentos": [
+      {"text": "Rehabilitación de Edificios y Viviendas - CARM.es", "url": "https://www.carm.es/web/pagina?IDCONTENIDO=23621&IDTIPO=100&RASTRO=c370$m22902,23645"},
+      {"text": "MANUAL PARA UN ENTORNO ACCESIBLE", "url": "http://sid.usal.es/idocs/F8/FDO17241/manualparaunentornoaccesible.pdf"}
+    ]
+  },
+  "users": {
+    "email@email.com": {
+      "name": "jorge",
+      "surname": "gonzalez",
+      "password": "pass",
+      "role": 2
+    }
+  }
+}

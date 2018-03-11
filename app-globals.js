@@ -1,0 +1,1 @@
+export const SECRET_JWT_TOKEN = 'mi clave secreta tonta'
