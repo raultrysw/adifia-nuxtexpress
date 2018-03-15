@@ -17,6 +17,10 @@ let schema = new mongoose.Schema({
     likes: {
         type: Number,
         default: 0
+    },
+    address: {
+        type: String,
+        required: [true, 'Sin la dirección no se sabe donde esta el escalón']
     }
 })
 
