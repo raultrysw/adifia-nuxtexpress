@@ -3,14 +3,18 @@ import Photo from './model'
 import { pathPhotos } from './storage/photos';
 import {codifyToken, decodifyToken} from '../../utils/userSessions'
 
-const path = require('path')
+const mPath = require('path')
 const gm = require('gm').subClass({imageMagick: true})
+const fs = require('fs')
 
 export function create(req, res, next) {
     const {path, destination} = req.file;
     let photo = new Photo(req.body)
     
-    let finalPath = path.join(destination, photo._id + '.jpg')
+    console.log('filees: ',req.files);
+    
+
+    let finalPath = mPath.join(destination, photo._id + '.jpg')
     gm(path).resize(500, 800).write(finalPath, (err) => {
         fs.unlink(path, err => {
             photo.save((err, doc) => {
@@ -28,11 +32,12 @@ export function retrieve(req, res, next) {
     let token = decodifyToken(req.headers['jwt-user-token'])
     let filter = {}
 
-    let theUserIsNotAdmin = token.pvLvl < 2
-    
-    if (theUserIsNotAdmin) {
+    if (token) {
+        let theUserIsNotAdmin = token.pvLvl < 2
+        if (theUserIsNotAdmin) filter.valid = true
+    } else if (token === null) {
         filter.valid = true
-    }
+    } else {}
 
     Photo.find(filter).exec((err, docs) => {
         res.status(200)
@@ -85,7 +90,7 @@ export function destroy(req, res, next) {
         }
         return next()
     }
-    
+
     Photo.findByIdAndRemove(req.params.id, (err, doc) => {
         fs.unlink(path.join(pathPhotos, req.params.id + '.jpg'), (err) => {
             res.locals = {

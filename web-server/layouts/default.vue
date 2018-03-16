@@ -5,7 +5,7 @@
       <h1 class="app__title" ><nuxt-link to="/">Adifia</nuxt-link></h1>
       <ul class="no-list nav nav--horizontal">
         <li class="nav__item"><nuxt-link to="/articles">Blog</nuxt-link></li>
-        <!-- <li class="nav__item"><nuxt-link to="/photos">Foto denuncia</nuxt-link></li> -->
+        <li class="nav__item"><nuxt-link to="/photos">Foto denuncia</nuxt-link></li>
       </ul>
       <adifia-login-box v-if="!logged" />
       <user-box v-else />
