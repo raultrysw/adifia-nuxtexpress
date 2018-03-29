@@ -1,15 +1,7 @@
 <template>
-  <div class="app main-start" v-if="loaded">
-    <aside class="app__aside">
-      <adifia-logo />
-      <h1 class="app__title" ><nuxt-link to="/">Adifia</nuxt-link></h1>
-      <ul class="no-list nav nav--horizontal">
-        <li class="nav__item"><nuxt-link to="/articles">Blog</nuxt-link></li>
-        <li class="nav__item"><nuxt-link to="/photos">Foto denuncia</nuxt-link></li>
-      </ul>
-      <adifia-login-box v-if="!logged" />
-      <user-box v-else />
-    </aside>
+  <div :class="rootAppStyles" v-if="loaded">
+    <adifia-header v-if="smallDevice" />
+    <adifia-aside v-else />
     <main class="app__main main-start flex-column">
       <header class="app__header" >
         <h1 class="app__title-page" >{{currentTitle}}</h1>
@@ -21,18 +13,32 @@
 
 <script>
 import {mapState} from 'vuex'
-import AdifiaLoginBox from '~/components/AdifiaLoginBox.vue'
-import UserBox from '~/components/UserBox.vue'
-import AdifiaLogo from '~/components/AdifiaLogo.vue'
 
+import AdifiaAside from '~/components/AdifiaAside.vue'
+import AdifiaHeader from '~/components/AdifiaHeader.vue'
 export default {
-  components: {AdifiaLoginBox, UserBox, AdifiaLogo},
+  components: {AdifiaAside, AdifiaHeader},
+  data() {
+    return {
+      smallDevice: false
+    }
+  },
   mounted() {
     if(!this.logged) this.$store.dispatch('recoverUser')
+    let m = matchMedia('(max-width: 1024px)')
+    m.addListener(() => {
+      this.smallDevice = m.matches
+      
+    })
   },
   computed: {
     ...mapState(['currentTitle', 'loaded']),
-    ...mapState('sessions', ['logged'])
+    rootAppStyles() {
+      return {
+        app: true,
+        'main-start': !this.smallDevice
+      }
+    }
   }
 }
 </script>
@@ -40,6 +46,10 @@ export default {
 
 <style lang="scss">
 @import 'ed-grid/css/ed-grid.min.css';
+@import '../scss/colors.scss';
+
+$panelBackground: lighten($color-primary-0, 25%);
+
 
 * {
   padding: 0;
@@ -50,20 +60,35 @@ export default {
   height: 100vh;
   width: 100vw;
   &__header {
-    border-bottom: 1px solid;
+    background: $panelBackground;
+    box-shadow: 0px -3px 10px 0 darken($panelBackground, 10%) inset;
   }
   &__aside {
-    width: 200px;
-    border-right: 1px solid;
-  }
-  &__main {
-    flex-grow: 1;
-    &-content {
-      padding: 0em .5em;
+    background: $panelBackground;
+    @media screen and (min-width: 1024px) {
+      flex-basis: 250px;
     }
   }
-  &__title, &__title-page {
+  &__main {
+    @media screen and (min-width: 1024px) {
+      flex-basis: calc(100% - 250px);
+      &-content {
+        margin: 0em 2em;
+      }
+    }
+  }
+  &__title {
     text-align: center;
+    margin: .4em 0em;
+  }
+  &__title, &__title-page, &__navigator-bar {
+    font-family: serif;
+    text-decoration: underline overline;
+    letter-spacing: 0.13em;
+    text-shadow: 0px 0px 3% black;
+  }
+  &__navigator-bar {
+    justify-content: center;
   }
 }
 .no-list {

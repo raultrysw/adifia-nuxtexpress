@@ -3,18 +3,7 @@
         <img :src="avatarUrl" ref="avatarImg" @click="changeAvatar" width="200" height="400" />
         <input id="avatarUploader" type="file" ref="avatarImgInput" @change="pushImage" >
         <h2>Artículos</h2>
-        <table v-if="isVocal" class="articles-table">
-            <thead class="articles-table__header">
-                <th>Título del artículo</th>
-                <th>Escritor</th>
-                <th>Estado</th>
-                <th>Fecha de creación</th>
-                <th v-if="isAdmin && !allArePublished">Operaciones</th>
-            </thead>
-            <tbody>
-                <tr @change="reloadChanges" v-for="(article, index)  in articles" :key="index" :article="article" is="adifia-article-manager"></tr>
-            </tbody>
-        </table>
+        <adifia-articles-management v-if="isVocal"  />
         <section v-else>
             <h3>Eeres socio</h3>
         </section>
@@ -24,12 +13,12 @@
 <script>
 import axios from 'axios'
 import {mapGetters, mapState} from 'vuex'
-import AdifiaArticleManager from '~/components/AdifiaArticleManager'
+import AdifiaArticlesManagement from '~/components/AdifiaArticlesManagement'
 
 const MEMBERS_URI = 'http://localhost:7000/api/members/serv/avatar'
 
 export default {
-    components: {AdifiaArticleManager},
+    components: {AdifiaArticlesManagement},
     data() {
         return {
             showui: false,
@@ -42,10 +31,7 @@ export default {
             return this.$router.push('/')
         }
         this.$store.commit('title', 'Tu página privada')
-        
-        this.reloadChanges.bind(this)(() => {
-            this.showui = true
-        })
+        this.showui = true
     },
     methods: {
         changeAvatar() {
@@ -75,26 +61,12 @@ export default {
                 this.drawImage(this.$refs.avatarImg, file)
             })
         },
-        reloadChanges(cb) {
-            axios.get(this.ARTICLES_URI).then(response => {
-                this.articles = []
-                this.articles = response.data.articles
-                cb();
-            })
-        }
+        
     },
     computed: {
         ...mapState('sessions', ['user']),
         ...mapGetters('sessions', ['isVocal', 'isAdmin', 'avatarUrl']),
-        ...mapGetters(['headers']),
-        ARTICLES_URI() {
-            return 'http://localhost:7000/api/articles?all=true&token=' + this.headers['jwt-user-token']
-        },
-        allArePublished() {
-            let articlesPublished = this.articles.filter(article => article.state === 2)
-            console.log(articlesPublished, this.articles)
-            return articlesPublished.length === this.articles.length
-        }
+        ...mapGetters(['headers'])
     }
 }
 </script>
