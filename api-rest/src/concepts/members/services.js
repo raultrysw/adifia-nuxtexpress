@@ -1,6 +1,6 @@
 import Member from './model'
 import logFactory from '../../utils/log'
-import {codifyToken, decodifyToken} from '../../utils/userSessions'
+const {encode} = require('../../../../utils/user-token')
 
 const fs = require('fs')
 const pathM = require('path')
@@ -61,7 +61,7 @@ export function logIn(req, res, next) {
 
         const {name, surname, pvLvl, _id, avatar} = doc._doc
         const userFound = {email, name, surname, pvLvl, _id, avatar}
-        userFound.token = codifyToken(userFound)
+        userFound.token = encode(userFound)
         log('debug', 'Enviando datos de usuario')
         console.log(doc);
         

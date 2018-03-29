@@ -1,24 +1,24 @@
 <template>
-<form @submit.prevent="login" name="login-form">
-    <ul>
-        <li v-for="(message, index) in errorMessages" :key="index">{{message}}</li>
-    </ul>
-    <h2>¡Entra a adifia!</h2>
+<div>
+    <rsw-form :errors="errorMessages" :submitHandler="login" submitText="entrar">
+        <rsw-field-input text="Email" name="email-user" description="Pon tu correo electronico" type="email" />
+        <rsw-field-input text="Password" name="password-user" description="Pon tu contraseña" type="password" />
+    </rsw-form>
     <div>
-        <label><span>Email</span><input type="text" name="email-user"/></label>
+        <h3>Y si no...</h3>
+        <nuxt-link to="/signup">registrese</nuxt-link> o
+        <nuxt-link to="/about">Conozcanos</nuxt-link>
     </div>
-    <div>
-        <label><span>Password</span><input type="password" name="password-user"/></label>
-    </div>
-    <p><input type="submit" value="Entrar">,
-    <nuxt-link to="/signup">registrese</nuxt-link> o
-    <nuxt-link to="/about">Conozcanos</nuxt-link></p>
-</form>
+</div>
 </template>
 
 <script>
+import rswForm from 'rsw-vue-components/components/RSWForm.vue'
+import rswFieldInput from 'rsw-vue-components/components/RSWFieldInput.vue'
 import {mapActions, mapState} from 'vuex'
+
 export default {
+    components: {rswForm, rswFieldInput},
     computed: {
         ...mapState('sessions', ['errorMessages'])
     },

@@ -1,24 +1,25 @@
 <template>
-    <form @submit.prevent="submitArticle">
-        <div>
-            <label><span>Título del artículo</span><input v-model="title" type="text" name="title-article"/></label>
-        </div>
+    <rsw-form :submitHandler="submitArticle" submitText="Enviar artículo" :errors="errors">
+        <rsw-field-input text="Título del artículo" v-model="title" description="Pon el título del artículo" />
         <editor :init="initmce" v-model="body" />
-        <p><input type="submit" value="Crear artículo"></p>
-    </form>
+    </rsw-form>
 </template>
 
 <script>
 import Editor from '@tinymce/tinymce-vue';
-import {mapActions} from 'vuex';
+import {mapActions, mapGetters} from 'vuex';
 import axios from 'axios'
 
 const URI_TO_UPLOAD_ARTICLES_IMAGES = 'http://localhost:7000/api/articles/serv/uploadimage'
+
+import rswForm from 'rsw-vue-components/components/RSWForm.vue'
+import rswFieldInput from 'rsw-vue-components/components/RSWFieldInput.vue'
 
 const init = {
     toolbar: ['insertimage'],
     setup: editor => {
         function insertImage(response) {
+            debugger
             let imgTag = '<img src="' + response.data.url + '" />'
             editor.insertContent(imgTag)
         }
@@ -47,15 +48,26 @@ const init = {
 }
 
 export default {
+    components: {Editor, rswForm, rswFieldInput},
     data() {
         return {
-            initmce: init
+            initmce: init,
+            show: false,
+            errors: []
         }
     },
     created() {
-        this.$store.commit('title', 'Creación de artículo')
+        if (this.isVocal) {
+            this.$store.commit('title', 'Creación de artículo')
+            this.show = true;
+        } else {
+            this.$router.push('/')
+        }
     },
     computed: {
+        ...mapGetters({
+            isVocal: 'sessions/isVocal'
+        }),
         title: {
             get() {return this.$store.state.articles.newArticle.title},
             set(value) {this.$store.state.articles.newArticle.title = value},
@@ -69,12 +81,15 @@ export default {
         ...mapActions('articles', 'sendArticle'),
         submitArticle() {
             this.$store._actions['articles/sendArticle'][0](response => {
-                let {doc} = response.data
-                console.log('Se creo el doc:', doc);
-                this.$router.push('/articles')
+                let {doc, errors} = response.data
+                debugger
+                if (errors) this.errors = errors
+                else {
+                    console.log('Se creo el doc:', doc);
+                    this.$router.push('/articles')
+                }
             })
         }
-    },
-    components: {Editor}
+    }
 }
 </script>

@@ -1,7 +1,6 @@
 import logFactory from '../../utils/log'
 import Member from '../members/model'
 import Article from './model'
-import {decodifyToken} from '../../utils/userSessions'
 import {getMongoDocumentErrors} from '../../utils/controllerUtils'
 
 
@@ -24,10 +23,7 @@ export function get(req, res, next) {
 }
 
 export function create(req, res, next) {
-    let token = req.headers['jwt-user-token'];
-    let userWritingPayload = decodifyToken(token)
-
-    let {email} = userWritingPayload
+    let {email} = req.user
     
     const {title, body} = req.body
     let article = new Article({title, body})
@@ -54,12 +50,37 @@ export function create(req, res, next) {
     
 }
 
+
+/**
+ * Si es vocal ver articulos propios
+ * Si es dministror ver artículos propios o con estado a uno
+ */
 export function retrieve(req, res, next) {
-    Article.find({state: 2}).sort({'createdAt': -1})
-            .populate('author', ['name', 'surname', 'rol'])
+    let query = Article.find()
+    query.populate('author', ['name', 'surname', 'email', 'rol'])
+
+    let user = req.user
+    
+    let retrieveAll = req.query.all
+    if (retrieveAll && user) {
+        let isAdmin = user.pvLvl >= 2
+        let isVocal = user.pvLvl >= 1
+
+        if (isVocal) {
+            console.log('vocal');
+            
+            if (isAdmin) query.where('state').or([{author: user._id}, {state: {$gte: 1}}])
+            else query.where('author').equals(user._id)
+        }
+    } else query.where('state').equals(2)
+    
+
+    query.sort({'createdAt': -1})
             .exec((err, articles) => {
         res.status(200)
         if (err) {
+            console.log(err);
+            
             res.locals.errors = err
             return next()
         }
@@ -72,6 +93,17 @@ export function retrieve(req, res, next) {
 
 export function update(req, res, next) {
     let $set = req.body
+
+    let user = req.user
+    let noHeaders = !user
+    let notIsAuthorized = !noHeaders && user.pvLvl < 2;
+
+    if (noHeaders && notIsAuthorized) {
+        res.status(403)
+        res.locals = {status: 'bad'}
+        return next()
+    }
+
     Article.findByIdAndUpdate(req.params.id, {$set}, (err, doc) => {
         res.status(200)
         if (err) {
@@ -87,9 +119,10 @@ export function update(req, res, next) {
 
 export function destroy(req, res, next) {
     log('debug', 'Eliminando un artículo')
-    console.log(req.headers);
     
-    if (req.headers['jwt-user-token'] === undefined) {
+    let user = req.user
+    let notIsAuthorized = !user && req.heders.pvLvl < 2;
+    if (user && notIsAuthorized) {
         res.status(403)
         res.locals = {status: 'bad'}
         return next()

@@ -1,29 +1,31 @@
 <template>
   <div v-if="showUi">
-      <form v-if="!logged" @submit.prevent="registerUser" name="new-user-form">
-            <div>
-                <label><span>Nombre</span><input type="text" name="name-user"/></label>
-            </div>
-            <div>
-                <label><span>Apellidos</span><input type="text" name="surname-user"/></label>
-            </div>
-            <div>
-                <label><span>Email</span><input type="text" name="email-user"/></label>
-            </div>
-            <div>
-                <label><span>Contraseña</span><input type="pass" name="password-user"/></label>
-            </div>
-            <p><input type="submit" value="Registrarse"></p>    
-      </form>
+      <rsw-form v-if="!logged" :errors="errors" submitText="Enviar" :submitHandler="registerUser" formName="new-user">
+          <rsw-field-input v-model="name" type="text" text="Nombre" description="Pon tu nombre" />
+          <rsw-field-input v-model="surname" type="text" text="Apelldios" description="Pon tus apellidos" />
+          <rsw-field-input v-model="email" type="text" text="Correo electrónico" description="Pon tus email" />
+          <rsw-field-input v-model="password" type="password" text="Contraseña" description="Pon tu contraseña" />
+      </rsw-form>
       <h2 v-else>Te has logueado, <nuxt-link to="/">Vuelve a la página principal</nuxt-link></h2>
   </div>
 </template>
 <script>
 import {mapActions, mapState} from 'vuex'
+import rswForm from 'rsw-vue-components/components/RSWForm.vue'
+import rswFieldInput from 'rsw-vue-components/components/RSWFieldInput.vue'
+
 export default {
+    components: {
+        rswForm, rswFieldInput
+    },
     data() {
         return {
-            showUi: false
+            errors: [],
+            showUi: false,
+            name: '',
+            surname: '',
+            email: '',
+            password: ''
         }
     },
     computed: {
@@ -39,8 +41,14 @@ export default {
     methods: {
         ...mapActions('users', ['register']),
         registerUser() {
-            this.register(response => {
+            const {name, surname, email, password} = this
+            const user = {name, surname, email, password}
+            
+            this.register({user}).then(response => {
+                console.log(response);
+                
                 if (response.data.status === 'ok') this.$router.push('/')
+                else this.errors = response.data.errors;
             })
         }
     }

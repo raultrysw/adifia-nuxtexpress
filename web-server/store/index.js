@@ -4,8 +4,7 @@ import sessions from './sessions'
 import users from './users'
 import articles from './articles'
 
-const jwt = require('jsonwebtoken')
-const SECRET_JWT_TOKEN = 'mi clave secreta tonta'
+const {encode, decode} = require('../../utils/user-token')
 
 const createStore = () => {
   return new Vuex.Store({
@@ -23,17 +22,17 @@ const createStore = () => {
       getters: {
         headers(state) {
           return {
-              'jwt-user-token': state.sessions.user === null ? false : jwt.sign(state.sessions.user, SECRET_JWT_TOKEN)
+              'jwt-user-token': state.sessions.user === null ? false : encode(state.sessions.user)
           }
         }
     },
       actions: {
         saveToken({state}, payload) {
-            let token = jwt.sign(state.sessions.user, SECRET_JWT_TOKEN)
+            let token = encode(state.sessions.user, SECRET_JWT_TOKEN)
             localStorage.setItem('jwt-token', token)
         },
           recoverUser({state}) {
-            let user = jwt.decode(localStorage.getItem('jwt-token'))
+            let user = decode(localStorage.getItem('jwt-token'))
             if (user != null) {
                 const {name, surname, email, pvLvl, _id, avatar} = user
                 state.sessions.user = {name, surname, email, pvLvl, _id, avatar}

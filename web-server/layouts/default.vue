@@ -80,4 +80,11 @@ export default {
     margin: .25em .5em;
   }
 }
+table {
+  width: 100%
+}
+.svg-inline--fa {
+  cursor: pointer;
+  margin: 0 .3em;
+}
 </style>

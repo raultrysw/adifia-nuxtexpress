@@ -1,7 +1,6 @@
 import {logFactory} from '../../utils/log'
 import Photo from './model'
 import { pathPhotos } from './storage/photos';
-import {codifyToken, decodifyToken} from '../../utils/userSessions'
 
 const mPath = require('path')
 const gm = require('gm').subClass({imageMagick: true})
@@ -11,7 +10,7 @@ export function create(req, res, next) {
     const {path, destination} = req.file;
     let photo = new Photo(req.body)
     
-    console.log('filees: ',req.files);
+    console.log('files: ',req.files);
     
 
     let finalPath = mPath.join(destination, photo._id + '.jpg')
@@ -29,13 +28,13 @@ export function create(req, res, next) {
 }
 
 export function retrieve(req, res, next) {
-    let token = decodifyToken(req.headers['jwt-user-token'])
+    let user = req.user
     let filter = {}
 
-    if (token) {
-        let theUserIsNotAdmin = token.pvLvl < 2
+    if (user) {
+        let theUserIsNotAdmin = user.pvLvl < 2
         if (theUserIsNotAdmin) filter.valid = true
-    } else if (token === null) {
+    } else if (user === null) {
         filter.valid = true
     } else {}
 
@@ -59,8 +58,8 @@ export function retrieve(req, res, next) {
 export function update(req, res, next) {
     const $set = req.body
 
-    let token = decodifyToken(req.headers['jwt-user-token'])
-    let theUserIsNotAdmin = token.pvLvl < 2
+    let user = user
+    let theUserIsNotAdmin = user.pvLvl < 2
     
     if (theUserIsNotAdmin) {
         res.status(404)
@@ -80,8 +79,8 @@ export function update(req, res, next) {
 }
 
 export function destroy(req, res, next) {
-    let token = decodifyToken(req.headers['jwt-user-token'])
-    let theUserIsNotAdmin = token.pvLvl < 2
+    let user = req.user
+    let theUserIsNotAdmin = user.pvLvl < 2
     
     if (theUserIsNotAdmin) {
         res.status(404)

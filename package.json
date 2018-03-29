@@ -1,0 +1,25 @@
+{
+  "name": "adifia",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app-globals.js",
+  "scripts": {
+    "start-web-server": "cd web-server && npm run dev",
+    "start-api-server": "cd api-rest && npm start",
+    "start": "concurrently \"npm run start-api-server\" \"npm run start-web-server\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/raultrysw/adifia.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/raultrysw/adifia/issues"
+  },
+  "homepage": "https://github.com/raultrysw/adifia#readme",
+  "dependencies": {
+    "jwt-simple": "^0.5.1"
+  }
+}

@@ -6,7 +6,8 @@ import {router as ARTICLES_ROUTER, model as ARTICLES_MODEL, BASE_URL as BASE_URL
 import {router as PHOTOS_ROUTER, model as PHOTOS_MODEL, BASE_URL as BASE_URL_FOR_PHOTOS} from './concepts/photos/'
 import logFactory from './utils/log'
 
-let cors = require('cors')
+const {recoverUser} = require('../../utils/user-token')
+const cors = require('cors')
 const log = logFactory("ROOT APP")
 const mongoose = require('mongoose')
 
@@ -14,12 +15,14 @@ mongoose.connect(DB_MONGO_URI, {}, upServer)
 
 function upServer(error) {
     if (error) {
-        log('error', 'No se pudo conectar a la base de datos: ' + error.message);
+        log('error', 'No se pudo nectar a la base de datos: ' + error.message);
         return
     }
     log('info', 'Conectado correctamente a la base de datos');
     
     const server = express();
+
+    server.use(recoverUser)
     server.use('/assets', express.static(ASSETS_DIR))
     
     server.use(cors())

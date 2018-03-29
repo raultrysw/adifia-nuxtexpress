@@ -29,8 +29,8 @@ let actions = {
         localStorage.removeItem('jwt-token')
     },
     
-    login({state, rootState, commit}) {
-        let form = document.forms['login-form']
+    login({state, rootState, commit}, e) {
+        let form = e.target
         let user = {
             email: form['email-user'].value,
             password: form['password-user'].value

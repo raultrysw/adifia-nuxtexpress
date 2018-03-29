@@ -18,6 +18,7 @@ const actions = {
     sendArticle({rootGetters, state}, cb) {
         let {headers} = rootGetters
         let article = state.newArticle
+        debugger
         axios.post(URI_TO_ARTICLES_CREATION, article, {
             headers: rootGetters.headers
         }).then((response) => {

@@ -2,40 +2,39 @@
     <section v-if="showui">
         <img :src="avatarUrl" ref="avatarImg" @click="changeAvatar" width="200" height="400" />
         <input id="avatarUploader" type="file" ref="avatarImgInput" @change="pushImage" >
-        <div class="">
-            <section v-if="isAdmin && articlesUnpublished.length" >
-                <h3>Listado de artículos para moderar</h3>
-                <adifia-article level="0" v-for="(article, index) in articlesUnpublished" :key="index" @change="reloadChanges" :article="article"  />
-            </section>
-            <section v-if="isVocal && mineArticles.length">
-                <h3>Lista de artículos que escribiste</h3>
-                <adifia-article level="0" v-for="(article, index) in mineArticles" :key="index" :article="article" @change="reloadChanges" />
-            </section>
-            <section v-else>
-                <h3>Eeres socio</h3>
-            </section>
-        </div>
+        <h2>Artículos</h2>
+        <table v-if="isVocal" class="articles-table">
+            <thead class="articles-table__header">
+                <th>Título del artículo</th>
+                <th>Escritor</th>
+                <th>Estado</th>
+                <th>Fecha de creación</th>
+                <th v-if="isAdmin && !allArePublished">Operaciones</th>
+            </thead>
+            <tbody>
+                <tr @change="reloadChanges" v-for="(article, index)  in articles" :key="index" :article="article" is="adifia-article-manager"></tr>
+            </tbody>
+        </table>
+        <section v-else>
+            <h3>Eeres socio</h3>
+        </section>
         
     </section>
 </template>
 <script>
 import axios from 'axios'
 import {mapGetters, mapState} from 'vuex'
-import AdifiaArticle from '~/components/AdifiaArticle'
+import AdifiaArticleManager from '~/components/AdifiaArticleManager'
 
-const ARTICLES_URI = 'http://localhost:7000/api/articles'
 const MEMBERS_URI = 'http://localhost:7000/api/members/serv/avatar'
 
-const URI_TO_UNPUBLISHED_ARTICLES = 'http://localhost:7000/api/articles/serv/unpublished'
-const URI_TO_MINE_ARTICLES = 'http://localhost:7000/api/articles/serv/mine'
-
 export default {
-    components: {AdifiaArticle},
+    components: {AdifiaArticleManager},
     data() {
         return {
             showui: false,
-            articlesUnpublished: [],
-            mineArticles: []
+            articles: [],
+            reloadedFirstTime: false
         }
     },
     mounted() {
@@ -77,29 +76,24 @@ export default {
             })
         },
         reloadChanges(cb) {
-            console.log('republicando');
-            
-            Promise.all(this.reqs).then(responses => {
-                debugger
-                if (this.isVocal) this.mineArticles = responses[0].data.articles
-                if (this.isAdmin) this.articlesUnpublished = responses[1].data.articles
-                this.showui = true
+            axios.get(this.ARTICLES_URI).then(response => {
+                this.articles = []
+                this.articles = response.data.articles
+                cb();
             })
         }
     },
     computed: {
         ...mapState('sessions', ['user']),
         ...mapGetters('sessions', ['isVocal', 'isAdmin', 'avatarUrl']),
-        reqs() {
-            let {isVocal, isAdmin} = this
-            let reqs = []
-
-            let headers = this.$store.getters.headers
-
-            if (isVocal) reqs.push(axios.get(URI_TO_MINE_ARTICLES, {headers}))
-            if (isAdmin) reqs.push(axios.get(URI_TO_UNPUBLISHED_ARTICLES, {headers}))
-
-            return reqs
+        ...mapGetters(['headers']),
+        ARTICLES_URI() {
+            return 'http://localhost:7000/api/articles?all=true&token=' + this.headers['jwt-user-token']
+        },
+        allArePublished() {
+            let articlesPublished = this.articles.filter(article => article.state === 2)
+            console.log(articlesPublished, this.articles)
+            return articlesPublished.length === this.articles.length
         }
     }
 }
@@ -107,5 +101,14 @@ export default {
 <style lang="scss">
 #avatarUploader {
     display: none;
+}
+.articles-table {
+    border-collapse: collapse;
+    &__header {
+        background: darkgrey;
+        font-weight: bold;
+        color: white;
+        font-size: 1.3em;
+    }
 }
 </style>
