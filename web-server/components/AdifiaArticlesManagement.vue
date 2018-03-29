@@ -48,7 +48,6 @@ export default {
         },
         allArePublished() {
             let articlesPublished = this.articles.filter(article => article.state === 2)
-            console.log(articlesPublished, this.articles)
             return articlesPublished.length === this.articles.length
         }
   }

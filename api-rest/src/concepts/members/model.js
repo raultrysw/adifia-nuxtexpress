@@ -1,10 +1,9 @@
 import logFactory from '../../utils/log'
 import {encrypt, comparePassword} from '../../utils/users'
 
+const {ROLS} = require('../../../../settings')
 const mongoose = require('mongoose')
 const log = logFactory('MEMBERS MODEL')
-
-const ROLS = ['Socio', 'Vocal', "Secretario", 'Tesorera', 'Presidente']
 
 let schema = new mongoose.Schema({
     name: {

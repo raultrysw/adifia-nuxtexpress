@@ -28,7 +28,7 @@ const createStore = () => {
     },
       actions: {
         saveToken({state}, payload) {
-            let token = encode(state.sessions.user, SECRET_JWT_TOKEN)
+            let token = encode(state.sessions.user)
             localStorage.setItem('jwt-token', token)
         },
           recoverUser({state}) {

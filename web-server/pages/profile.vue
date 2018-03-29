@@ -1,24 +1,28 @@
 <template>
     <section v-if="showui">
-        <img :src="avatarUrl" ref="avatarImg" @click="changeAvatar" width="200" height="400" />
-        <input id="avatarUploader" type="file" ref="avatarImgInput" @change="pushImage" >
+        <rsw-live-preview-image width="100%" height="16em" :atChange="pushImage" />
         <h2>Artículos</h2>
-        <adifia-articles-management v-if="isVocal"  />
+        <adifia-articles-management v-if="isVocal" />
+        <h2>Usuarios</h2>
+        <adifia-memebers-management v-if="isAdmin" />
         <section v-else>
             <h3>Eeres socio</h3>
         </section>
-        
     </section>
 </template>
 <script>
 import axios from 'axios'
 import {mapGetters, mapState} from 'vuex'
+
 import AdifiaArticlesManagement from '~/components/AdifiaArticlesManagement'
+import AdifiaMemebersManagement from '~/components/AdifiaMembersManagement'
+
+import rswLivePreviewImage from 'rsw-vue-components/components/RSWLivePreviewImage.vue'
 
 const MEMBERS_URI = 'http://localhost:7000/api/members/serv/avatar'
 
 export default {
-    components: {AdifiaArticlesManagement},
+    components: {AdifiaArticlesManagement, rswLivePreviewImage, AdifiaMemebersManagement},
     data() {
         return {
             showui: false,
@@ -34,20 +38,7 @@ export default {
         this.showui = true
     },
     methods: {
-        changeAvatar() {
-            this.$refs.avatarImgInput.dispatchEvent(new MouseEvent('click'))
-        },
-        drawImage(imgTag, file) {
-            var reader = new FileReader();
-
-            reader.onload = function (e) {
-                imgTag.setAttribute('src', e.target.result);
-            }
-
-            reader.readAsDataURL(file);
-        },
-        pushImage(e) {
-            let file = e.target.files[0]
+        pushImage(file, cb) {
             let formData = new FormData()
             formData.append('avatar', file)
             console.log('Enviando peticion');
@@ -58,7 +49,7 @@ export default {
                 this.$store.state.sessions.user.avatar = true
 
                 this.$store.dispatch('saveToken')
-                this.drawImage(this.$refs.avatarImg, file)
+                cb()
             })
         },
         

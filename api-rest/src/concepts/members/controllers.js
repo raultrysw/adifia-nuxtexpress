@@ -44,8 +44,8 @@ export function retrieve(req, res, next) {
             return next()
         }
         let users = docs.map(doc => {
-            let {name, surname, email} = doc
-            return {name, surname, email}
+            let {name, surname, email, pvLvl, _id} = doc
+            return {name, surname, email, pvLvl, _id}
         })
         res.locals = {
             status: 'ok', users

@@ -12,10 +12,10 @@ const log = logFactory("EN MEMBERS SERVICES")
 export function normalizeAvatarImage(req, res, next) {
     const {path, destination} = req.file;
 
-    let token = decodifyToken(req.headers['jwt-user-token']);
-    let newFileName = token._id + '.jpg'
+    let user = req.user
+    let newFileName = user._id + '.jpg'
 
-    req.userId = token._id
+    req.userId = user._id
 
     let finalPath = pathM.join(destination, newFileName)
     gm(path).resize(400, 600).write(finalPath, (err) => {
