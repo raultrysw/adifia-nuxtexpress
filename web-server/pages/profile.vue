@@ -41,10 +41,11 @@ export default {
         pushImage(file, cb) {
             let formData = new FormData()
             formData.append('avatar', file)
+            debugger
             console.log('Enviando peticion');
             
             axios.put(MEMBERS_URI, formData, {headers: this.$store.getters.headers}).then(response => {
-                console.log('respuestaa recibida');
+                console.log('respuestaa recibida', response);
                 
                 this.$store.state.sessions.user.avatar = true
 

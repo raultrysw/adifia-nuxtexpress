@@ -18,7 +18,12 @@ export function normalizeAvatarImage(req, res, next) {
     req.userId = user._id
 
     let finalPath = pathM.join(destination, newFileName)
+    log('debug', 'Escribiendo imagen en: ' + finalPath)
     gm(path).resize(400, 600).write(finalPath, (err) => {
+        if (err) {
+            log('debug', 'HUBO UN ERROR')
+            console.log(err)
+        }
         fs.unlink(path, (err) => {
             res.locals = {
                 status: 'ok',

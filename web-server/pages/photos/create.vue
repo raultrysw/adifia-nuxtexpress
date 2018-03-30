@@ -2,8 +2,8 @@
   <section>
       <h2>Subiendo una foto</h2>
       <img ref="imgPhoto" src="" alt="">
-        <rsw-form :submitHandler="sendForm" submitText="Enviar foto" :errors="errors">
-            <rsw-live-preview-image />
+        <rsw-form :submitHandler="sendForm" submitText="Enviar foto"  :errors="errors">
+            <rsw-live-preview-image height="15em" v-model="file" :atChange="updateImage" />
             <rsw-field-input text="Titulo" description="Título de la foto" v-model="title" />
             <rsw-field-input text="Email" description="Email de contacto" v-model="email" />
             <rsw-field-input text="Dirección" description="Dirección de la barrera" v-model="address" />
@@ -24,6 +24,7 @@ export default {
           title: '',
           email: '',
           address: '',
+          file: null,
           errors: []
       }
   },
@@ -35,36 +36,21 @@ export default {
             fd.append('title', title)
             fd.append('email', email)
             fd.append('address', address)
+            fd.append('photo', this.file)
 
-            let file = this.$refs.photo.files[0]
-            fd.append('photo', file)
+            debugger
 
             axios.post(URI_PHOTO_CREATE, fd).then(response => {
                 console.log('Petición hecha', response);
                 
-                console.log(title, email, address, file); 
+                console.log(title, email, address, this.file); 
             })
             
         },
-        changeAvatar() {
-            this.$refs.avatarImgInput.dispatchEvent(new MouseEvent('click'))
-        },
-        dispatchDrawImage(e) {
-            const file = e.target.files[0]
-            const imgTag = this.$refs.imgPhoto
-            this.drawImage(imgTag, file)
-        },
-        drawImage(imgTag, file) {
-            var reader = new FileReader();
-
-            reader.onload = function (e) {
-                console.log('Dibujando imagen');
-                
-                imgTag.setAttribute('src', e.target.result);
-            }
-
-            reader.readAsDataURL(file);
-        },
+        updateImage(file, cb) {
+            this.file = file
+            cb()
+        }
   }
 }
 </script>
