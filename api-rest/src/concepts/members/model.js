@@ -36,6 +36,12 @@ let schema = new mongoose.Schema({
     articles: [
         {type: mongoose.Schema.Types.ObjectId,
         ref: 'Article'}
+    ],
+    photos: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Photo'
+        }
     ]
 })
 

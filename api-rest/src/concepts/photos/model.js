@@ -14,10 +14,10 @@ let schema = new mongoose.Schema({
     emailSender: {
         type: String
     },
-    likes: {
-        type: Number,
-        default: 0
-    },
+    likes: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Member'
+    }],
     address: {
         type: String,
         required: [true, 'Sin la dirección no se sabe donde esta el escalón']
@@ -25,7 +25,6 @@ let schema = new mongoose.Schema({
 })
 
 class MemberClass {
-
 }
 
 schema.loadClass(MemberClass)

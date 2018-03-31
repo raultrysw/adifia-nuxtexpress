@@ -3,14 +3,14 @@ import Photo from './model'
 import { pathPhotos } from './storage/photos';
 
 const mPath = require('path')
-const gm = require('gm').subClass({imageMagick: true})
+const gm = require('gm').subClass({imageMagick: false})
 const fs = require('fs')
 
 export function create(req, res, next) {
     const {path, destination} = req.file;
     let photo = new Photo(req.body)
     
-    console.log('files: ',req.files);
+    console.log('files: ',req.file);
     
 
     let finalPath = mPath.join(destination, photo._id + '.jpg')
@@ -21,6 +21,8 @@ export function create(req, res, next) {
                     status: 'ok',
                     doc
                 }
+                console.log('Todo ha sido hecho con éxito');
+                
                 next()
             })
         })
@@ -45,8 +47,8 @@ export function retrieve(req, res, next) {
             return next()
         }
         let photos = docs.map(doc => {
-            let {title, _id} = doc
-            return {title, _id}
+            let {title, _id, likes} = doc
+            return {title, _id, likes}
         })
         res.locals = {
             status: 'ok', docs: photos
@@ -58,7 +60,9 @@ export function retrieve(req, res, next) {
 export function update(req, res, next) {
     const $set = req.body
 
-    let user = user
+    let user = req.user
+    console.log(user);
+    
     let theUserIsNotAdmin = user.pvLvl < 2
     
     if (theUserIsNotAdmin) {

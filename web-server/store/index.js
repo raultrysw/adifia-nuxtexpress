@@ -30,12 +30,16 @@ const createStore = () => {
         saveToken({state}, payload) {
             let token = encode(state.sessions.user)
             localStorage.setItem('jwt-token', token)
+            console.log('token salvado');
+            
         },
           recoverUser({state}) {
-            let user = decode(localStorage.getItem('jwt-token'))
+              let token = localStorage.getItem('jwt-token')
+              
+            let user = token && decode(token)
             if (user != null) {
-                const {name, surname, email, pvLvl, _id, avatar} = user
-                state.sessions.user = {name, surname, email, pvLvl, _id, avatar}
+                const {name, surname, email, pvLvl, _id, avatar, photos} = user
+                state.sessions.user = {name, surname, email, pvLvl, _id, avatar, photos}
                 console.log(state.sessions.user);
                 
                 state.sessions.logged = true

@@ -44,6 +44,7 @@ export default {
                 console.log('Petición hecha', response);
                 
                 console.log(title, email, address, this.file); 
+                this.$router.push('/photos')
             })
             
         },

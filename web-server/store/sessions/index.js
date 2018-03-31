@@ -22,7 +22,16 @@ let getters = {
     }
 }
 
+let mutations = {
+    likesUser(state, likesPhotos) {
+        console.log(likesPhotos);
+        
+        state.user.photos = likesPhotos
+    }
+}
+
 let actions = {
+    
     logout({state, rootState}) {
         state.logged = false
         state.user = null
@@ -46,8 +55,8 @@ let actions = {
             state.logged = true
             console.log(response.data.userFound);
             
-            const {email, name, surname, pvLvl, _id, avatar} = response.data.userFound
-            state.user = {email, name, surname, pvLvl, _id, avatar}
+            const {email, name, surname, pvLvl, _id, avatar, photos} = response.data.userFound
+            state.user = {email, name, surname, pvLvl, _id, avatar, photos}
             console.log(state.user);
             
             
@@ -56,4 +65,4 @@ let actions = {
     }
 }
 
-export default {namespaced, state, actions, getters}
+export default {namespaced, state, actions, getters, mutations}

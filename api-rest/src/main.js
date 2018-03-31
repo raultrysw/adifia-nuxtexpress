@@ -21,7 +21,7 @@ function upServer(error) {
     log('info', 'Conectado correctamente a la base de datos');
     
     const server = express();
-
+    
     server.use(recoverUser)
     server.use('/assets', express.static(ASSETS_DIR))
     

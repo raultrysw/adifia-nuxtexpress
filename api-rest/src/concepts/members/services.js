@@ -5,8 +5,7 @@ const {encode} = require('../../../../utils/user-token')
 const fs = require('fs')
 const pathM = require('path')
 
-const gm = require('gm').subClass({imageMagick: true});
-const jwt = require('jsonwebtoken');
+const gm = require('gm').subClass({imageMagick: false});
 const log = logFactory("EN MEMBERS SERVICES")
 
 export function normalizeAvatarImage(req, res, next) {
@@ -64,8 +63,9 @@ export function logIn(req, res, next) {
             }
         }
 
-        const {name, surname, pvLvl, _id, avatar} = doc._doc
-        const userFound = {email, name, surname, pvLvl, _id, avatar}
+        const {name, surname, pvLvl, _id, avatar, photos} = doc._doc
+        const userFound = {email, name, surname, pvLvl, _id, avatar, photos}
+        if (!userFound.photos) userFound.photos = []
         userFound.token = encode(userFound)
         log('debug', 'Enviando datos de usuario')
         console.log(doc);
