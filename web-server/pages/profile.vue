@@ -1,7 +1,12 @@
 <template>
     <section v-if="showui">
         <div class="main-start">
-            <rsw-live-preview-image :defaultImg="avatarUrl" width="15vw" height="16em" :atChange="pushImage" />
+            <rsw-live-preview-image :defaultImg="avatarUrl" width="15vw" height="10em" :atChange="pushImage" />
+            <div>
+                <div><span>Nombre</span>: {{this.user.name}}</div>
+                <div><span>Apellidos</span>: {{this.user.surname}}</div>
+                <div><span>Correo electrónico</span>: {{this.user.email}}</div>
+            </div>
         </div>
         <h2>Artículos</h2>
         <adifia-articles-management v-if="isVocal" />
