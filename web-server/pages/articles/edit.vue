@@ -1,6 +1,21 @@
 <template>
-    <rsw-form :submitHandler="submitArticle" submitText="Enviar artículo" :errors="errors">
-        <rsw-field-input text="Título del artículo" v-model="title" description="Pon el título del artículo" />
+    <rsw-form v-if="show" :submitHandler="submitArticle" submitText="Enviar artículo" :errors="errors">
+        <div class="main-start" v-if="isEvent">
+            <div>google maps</div>
+            <div>
+                <rsw-field-group-input title="Información del evento">
+                    <rsw-field-input text="Dia">
+                        <input type="date" />
+                    </rsw-field-input>
+                    <rsw-field-input text="Hora">
+                        <input type="time" />
+                    </rsw-field-input>
+                </rsw-field-group-input>
+            </div>
+        </div>
+        <rsw-field-group-input title="Título del artículo">
+            <rsw-field-input :value="title" v-model="title" description="Pon el título del artículo" />
+        </rsw-field-group-input>
         <editor :init="initmce" v-model="body" />
     </rsw-form>
 </template>
@@ -14,6 +29,7 @@ const URI_TO_UPLOAD_ARTICLES_IMAGES = 'http://localhost:7000/api/articles/serv/u
 
 import rswForm from 'rsw-vue-components/components/RSWForm.vue'
 import rswFieldInput from 'rsw-vue-components/components/RSWFieldInput.vue'
+import rswFieldGroupInput from 'rsw-vue-components/components/RSWFieldGroupInput.vue'
 
 const init = {
     toolbar: ['insertimage'],
@@ -48,18 +64,36 @@ const init = {
 }
 
 export default {
-    components: {Editor, rswForm, rswFieldInput},
+    components: {Editor, rswForm, rswFieldInput, rswFieldGroupInput},
+    layout: 'default',
     data() {
         return {
             initmce: init,
             show: false,
-            errors: []
+            errors: [],
+            isEvent: false
         }
     },
     created() {
         if (this.isVocal) {
-            this.$store.commit('context', {title: 'Creación de artículo', bar: ''})
-            this.show = true;
+            let id = this.$route.query.id
+            let thereIsNoId = id === undefined
+
+            let titlePage = 'Creación del artículo'
+            if (thereIsNoId) {
+                this.show= true
+                this.$store.commit('context', {title: titlePage, bar: ''})
+            } else {
+                axios.get(this.articleRecoveryURI).then(response => {
+                    const {title, body} = response.data.article
+                    titlePage = 'Editando el artículo `' + title + '`'
+                    this.title = title
+                    this.body = body
+                    this.$store.commit('context', {title: titlePage, bar: ''})
+                    this.show = true
+                })
+            }
+
         } else {
             this.$router.push('/')
         }
@@ -68,6 +102,9 @@ export default {
         ...mapGetters({
             isVocal: 'sessions/isVocal'
         }),
+        articleRecoveryURI() {
+            return 'http://localhost:7000/api/articles/' + this.$route.query.id
+        },
         title: {
             get() {return this.$store.state.articles.newArticle.title},
             set(value) {this.$store.state.articles.newArticle.title = value},
@@ -80,7 +117,7 @@ export default {
     methods: {
         ...mapActions('articles', 'sendArticle'),
         submitArticle() {
-            this.$store._actions['articles/sendArticle'][0](response => {
+            const cb = response => {
                 let {doc, errors} = response.data
                 debugger
                 if (errors) this.errors = errors
@@ -88,7 +125,14 @@ export default {
                     console.log('Se creo el doc:', doc);
                     this.$router.push('/articles')
                 }
-            })
+            }
+            
+            let isNewPost = this.$route.query.id === undefined
+            let payload = {cb}
+            if (!isNewPost) payload.uri = this.articleRecoveryURI
+            payload.method = isNewPost ? 'post' : 'put'
+            
+            this.$store._actions['articles/sendArticle'][0](payload)
         }
     }
 }

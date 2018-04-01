@@ -9,6 +9,7 @@
                 <font-awesome-icon v-if="isMine && !isPublished" @click="removeArticle" icon="times" />
                 <font-awesome-icon v-if="isUnSuccess" @click="sendToModerate" icon="arrow-up" />
                 <font-awesome-icon v-if="isAdmin && isModerating" @click="sendToPublish" icon="arrow-right" />
+                <nuxt-link :to="uriArticleEdition"><font-awesome-icon icon="edit" /></nuxt-link>
             </span>
         </td>
     </tr>
@@ -72,6 +73,10 @@ export default {
         },
         uriArticle() {
             return URI_TO_ARTICLE.replace(':id', this.article._id)
+        },
+        uriArticleEdition() {
+            let uri = '/articles/edit?id=' + this.article._id
+            return uri
         },
   },
   methods: {

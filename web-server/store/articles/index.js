@@ -15,11 +15,12 @@ const actions = {
     getArticles({}, cb) {
         axios.get(URI_TO_ARTICLES_RECOVERY).then(cb)
     },
-    sendArticle({rootGetters, state}, cb) {
+    sendArticle({rootGetters, state}, {uri, method, cb}) {
         let {headers} = rootGetters
         let article = state.newArticle
-        debugger
-        axios.post(URI_TO_ARTICLES_CREATION, article, {
+        let uriToPoint = uri || URI_TO_ARTICLES_CREATION
+
+        axios[method](uriToPoint, article, {
             headers: rootGetters.headers
         }).then((response) => {
             state.newArticle.title = ''

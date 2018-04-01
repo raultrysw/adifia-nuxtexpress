@@ -19,7 +19,7 @@ const createStore = () => {
         context(state, {title, bar}) {
             document.title = 'Adifia | ' + title
             state.currentTitle = title
-            state.currentBar = 'adifia-' + bar + '-toolbar'
+            state.currentBar = bar === '' ? bar : 'adifia-' + bar + '-toolbar'
             console.log('current toolbar', state.currentBar);
             
         }
