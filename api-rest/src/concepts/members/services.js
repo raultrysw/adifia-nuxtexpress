@@ -12,7 +12,7 @@ export function normalizeAvatarImage(req, res, next) {
     const {path, destination} = req.file;
 
     let user = req.user
-    let newFileName = user._id + '.jpg'
+    let newFileName = user._id + '.png'
 
     req.userId = user._id
 

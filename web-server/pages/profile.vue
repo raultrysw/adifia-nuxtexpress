@@ -1,6 +1,8 @@
 <template>
     <section v-if="showui">
-        <rsw-live-preview-image width="100%" height="16em" :atChange="pushImage" />
+        <div class="main-start">
+            <rsw-live-preview-image :defaultImg="avatarUrl" width="15vw" height="16em" :atChange="pushImage" />
+        </div>
         <h2>Artículos</h2>
         <adifia-articles-management v-if="isVocal" />
         <h2>Usuarios</h2>
@@ -58,7 +60,10 @@ export default {
     computed: {
         ...mapState('sessions', ['user']),
         ...mapGetters('sessions', ['isVocal', 'isAdmin', 'avatarUrl']),
-        ...mapGetters(['headers'])
+        ...mapGetters(['headers']),
+        avatarUrl() {
+            return this.user.avatar ? 'http://localhost:7000/assets/img/avatars/' + this.user._id + '.png' : 'http://localhost:7000/assets/img/avatars/default.png'
+        }
     }
 }
 </script>
@@ -74,5 +79,8 @@ export default {
         color: white;
         font-size: 1.3em;
     }
+}
+.user__avatar {
+    width: 25%;
 }
 </style>
