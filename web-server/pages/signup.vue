@@ -1,10 +1,14 @@
 <template>
   <div v-if="showUi">
       <rsw-form v-if="!logged" :errors="errors" submitText="Enviar" :submitHandler="registerUser" formName="new-user">
-          <rsw-field-input v-model="name" type="text" text="Nombre" description="Pon tu nombre" />
-          <rsw-field-input v-model="surname" type="text" text="Apelldios" description="Pon tus apellidos" />
-          <rsw-field-input v-model="email" type="text" text="Correo electrónico" description="Pon tus email" />
-          <rsw-field-input v-model="password" type="password" text="Contraseña" description="Pon tu contraseña" />
+          <rsw-filed-input-group title="Datos basicos">
+            <rsw-field-input v-model="name" type="text" text="Nombre" description="Pon tu nombre" />
+            <rsw-field-input v-model="surname" type="text" text="Apelldios" description="Pon tus apellidos" />
+          </rsw-filed-input-group>
+          <rsw-filed-input-group title="Datos de la cuenta" :vertical="true">
+            <rsw-field-input v-model="email" type="text" text="Correo electrónico" description="Pon tu email" />
+            <rsw-field-input v-model="password" type="password" text="Contraseña" description="Pon tu contraseña" />
+          </rsw-filed-input-group>
       </rsw-form>
       <h2 v-else>Te has logueado, <nuxt-link to="/">Vuelve a la página principal</nuxt-link></h2>
   </div>
@@ -13,10 +17,11 @@
 import {mapActions, mapState} from 'vuex'
 import rswForm from 'rsw-vue-components/components/RSWForm.vue'
 import rswFieldInput from 'rsw-vue-components/components/RSWFieldInput.vue'
+import rswFiledInputGroup from 'rsw-vue-components/components/RSWFieldGroupInput.vue'
 
 export default {
     components: {
-        rswForm, rswFieldInput
+        rswForm, rswFieldInput, rswFiledInputGroup
     },
     data() {
         return {

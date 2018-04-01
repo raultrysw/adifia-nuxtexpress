@@ -65,7 +65,7 @@ $panelBackground: lighten($color-primary-0, 25%);
   height: 100vh;
   width: 100vw;
   &__header {
-    
+    margin-bottom: 1em;
     background: $panelBackground;
     box-shadow: 0px -3px 10px 0 darken($panelBackground, 10%) inset;
   }
@@ -79,7 +79,8 @@ $panelBackground: lighten($color-primary-0, 25%);
     @media screen and (min-width: 1024px) {
       flex-basis: calc(100% - 250px);
       &-content {
-        margin: 0em 2em;
+        min-width: 75vw;
+        margin: 0em auto;
       }
     }
   }
