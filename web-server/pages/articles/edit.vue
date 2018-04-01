@@ -79,10 +79,13 @@ export default {
             let id = this.$route.query.id
             let thereIsNoId = id === undefined
 
+            
+
             let titlePage = 'Creación del artículo'
             if (thereIsNoId) {
                 this.show= true
                 this.$store.commit('context', {title: titlePage, bar: ''})
+                this.restoreArticle(id || 'new')
             } else {
                 axios.get(this.articleRecoveryURI).then(response => {
                     const {title, body} = response.data.article
@@ -107,15 +110,39 @@ export default {
         },
         title: {
             get() {return this.$store.state.articles.newArticle.title},
-            set(value) {this.$store.state.articles.newArticle.title = value},
+            set(value) {
+                this.saveInLocal('title', value)
+                this.$store.state.articles.newArticle.title = value
+            },
         },
         body: {
             get() {return this.$store.state.articles.newArticle.body},
-            set(value) {this.$store.state.articles.newArticle.body = value},
+            set(value) {
+                this.saveInLocal('body', value)
+                this.$store.state.articles.newArticle.body = value
+            },
         }
     },
     methods: {
         ...mapActions('articles', 'sendArticle'),
+        saveInLocal(articleKey, value) {
+            let localArticles = JSON.parse(localStorage.getItem('savedArticles'))
+            let key = this.$route.query.id || 'new'
+            localArticles[key][articleKey] = value
+            localStorage.setItem('savedArticles', JSON.stringify(localArticles))
+        },
+        restoreArticle(id) {
+            let localArticles = JSON.parse(localStorage.getItem('savedArticles'))
+            let key = this.$route.query.id || 'new'
+            let article = localArticles[key]
+            this.title = article['title']
+            this.body = article['body']
+        },
+        dropArticle(id) {
+            let localArticles = JSON.parse(localStorage.getItem('savedArticles'))
+            localArticles[id] = {}
+            localStorage.setItem('savedArticles', JSON.stringify(localArticles))
+        },
         submitArticle() {
             const cb = response => {
                 let {doc, errors} = response.data
@@ -123,6 +150,7 @@ export default {
                 if (errors) this.errors = errors
                 else {
                     console.log('Se creo el doc:', doc);
+                    this.dropArticle(this.$route.query.id || 'new')
                     this.$router.push('/articles')
                 }
             }

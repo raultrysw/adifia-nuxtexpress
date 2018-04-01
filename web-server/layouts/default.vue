@@ -28,6 +28,15 @@ export default {
     }
   },
   mounted() {
+    let localArticles = localStorage.getItem('savedArticles')
+    
+    if (!localArticles) {
+      let localArticlesObject = {
+        new: {}
+      }
+      localStorage.setItem('savedArticles', JSON.stringify(localArticlesObject))
+    }
+
     if(!this.logged) this.$store.dispatch('recoverUser')
     let m = matchMedia('(max-width: 1024px)')
     m.addListener(() => {
