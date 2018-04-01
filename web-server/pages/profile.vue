@@ -8,10 +8,24 @@
                 <div><span>Correo electrónico</span>: {{this.user.email}}</div>
             </div>
         </div>
-        <h2>Artículos</h2>
-        <adifia-articles-management v-if="isVocal" />
-        <h2>Usuarios</h2>
-        <adifia-memebers-management v-if="isAdmin" />
+        <div v-if="isVocal">
+            <div>
+                <span>Ver</span>
+                <select v-if="isAdmin" v-model="optionChoosen">
+                    <option value="1">Articulos</option>
+                    <option value="2">Usuarios</option>
+                </select>
+            </div>
+            <div v-if="optionChoosen === '1'">
+                <h2>Artículos</h2>
+                <adifia-articles-management v-if="isVocal" />
+            </div>
+            <div v-if="optionChoosen === '2'">
+                <h2>Usuarios</h2>
+                <adifia-memebers-management v-if="isAdmin" />
+            </div>
+        </div>
+        
         <section v-else>
             <h3>Eeres socio</h3>
         </section>
@@ -34,7 +48,8 @@ export default {
         return {
             showui: false,
             articles: [],
-            reloadedFirstTime: false
+            reloadedFirstTime: false,
+            optionChoosen: '1'
         }
     },
     mounted() {
