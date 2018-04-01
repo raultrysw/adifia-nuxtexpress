@@ -58,7 +58,7 @@ export default {
     },
     created() {
         if (this.isVocal) {
-            this.$store.commit('title', 'Creación de artículo')
+            this.$store.commit('context', {title: 'Creación de artículo', bar: ''})
             this.show = true;
         } else {
             this.$router.push('/')

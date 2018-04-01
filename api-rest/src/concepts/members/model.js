@@ -5,6 +5,8 @@ const {ROLS} = require('../../../../settings')
 const mongoose = require('mongoose')
 const log = logFactory('MEMBERS MODEL')
 
+const maxPvLvl = ROLS.length - 1
+
 let schema = new mongoose.Schema({
     name: {
         type: String,
@@ -75,6 +77,32 @@ schema.loadClass(MemberClass)
 
 let membersModel = mongoose.model('Member', schema)
 log('debug', 'Modelo members creado')
+
+schema.post('save', (user, next) => {
+    log('debug', 'Antes de salvar')
+    
+    membersModel.find({}).exec((err, users) => {
+        if (err) {
+            console.log(err)
+            return next(err)
+        }
+        let thereIsJustOne = users.length === 1
+        let firstIsNotAdmin = users[0].pvLvl !== maxPvLvl
+        
+        if (thereIsJustOne && firstIsNotAdmin) {
+            user.pvLvl = maxPvLvl
+            log('debug', 'Es el primer usuario')
+            user.save((err, user) => {
+                if (err) {
+                    console.log(err);
+                    return next(err)
+                }
+                next()
+            })
+        } else next()
+    })
+
+})
 
 export default membersModel
 

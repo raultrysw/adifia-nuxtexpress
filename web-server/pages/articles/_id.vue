@@ -14,7 +14,9 @@ export default {
     mounted() {
          axios.get(this.uriArticle).then(response => {
              this.article = response.data.article
-             this.$store.commit('title', 'Blog - ' + this.article.title)
+             let title = 'Blog - ' + this.article.title
+
+             this.$store.commit('context', {title, bar: ''})
              this.loaded = true
          })
     },

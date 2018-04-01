@@ -35,7 +35,7 @@ export default {
         if (this.$store.state.logged) {
             return this.$router.push('/')
         }
-        this.$store.commit('title','Registrate en Adifia')  
+        this.$store.commit('title',{title: 'Registrate en Adifia', bar: ''})  
         this.showUi = true    
     },
     methods: {

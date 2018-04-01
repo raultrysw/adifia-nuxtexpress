@@ -5,7 +5,7 @@
     <main class="app__main main-start flex-column">
       <header class="app__header main-justify cross-center" >
         <h1 class="app__title-page" >{{currentTitle}}</h1>
-        <div :is="currentBar"></div>
+        <div v-if="currentBar && isAdmin" :is="currentBar"></div>
       </header>
       <section class="app__main-content" is="nuxt"></section>
     </main> 
@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import {mapState} from 'vuex'
+import {mapState, mapGetters} from 'vuex'
 
 import AdifiaAside from '~/components/AdifiaAside.vue'
 import AdifiaHeader from '~/components/AdifiaHeader.vue'
@@ -37,6 +37,7 @@ export default {
   },
   computed: {
     ...mapState(['currentTitle', 'loaded', 'currentBar']),
+    ...mapGetters('sessions', ['isAdmin']),
     rootAppStyles() {
       return {
         app: true,

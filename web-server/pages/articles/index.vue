@@ -24,7 +24,7 @@ export default {
     };
   },
   created() {
-    this.$store.commit("title", "Blog de adifia");
+    this.$store.commit("context", {title: "Blog de adifia", bar: ''});
   },
   computed: {
     ...mapGetters("sessions", ["isVocal"])

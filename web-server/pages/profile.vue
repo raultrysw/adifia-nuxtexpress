@@ -34,7 +34,7 @@ export default {
         if (!this.$store.state.sessions.logged) {
             return this.$router.push('/')
         }
-        this.$store.commit('title', 'Tu página privada')
+        this.$store.commit('context', {title: 'Tu página privada', bar: ''})
         this.showui = true
     },
     methods: {

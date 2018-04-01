@@ -41,7 +41,7 @@
 <script>
 export default {
     mounted() {
-        this.$store.commit('title', 'Acerca de adifia')
+        this.$store.commit('context', {title:'Acerca de adifia', bar: ''})
     }
 }
 </script>

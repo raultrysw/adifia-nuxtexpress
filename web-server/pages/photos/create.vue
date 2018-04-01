@@ -28,6 +28,9 @@ export default {
           errors: []
       }
   },
+  created() {
+      this.$store.commit('context', {title: 'Subiendo una foto', bar: ''})
+  },
   methods: {
         sendForm() {
             const {title, email, address} = this
