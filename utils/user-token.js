@@ -6,7 +6,7 @@ const decode = (token) => jwtSimple.decode(token, secret)
 const encode = (objectUser) => jwtSimple.encode(objectUser, secret)
 
 function recoverUser(req, res, next) {
-    const userToken = req.headers['jwt-user-token']
+    const userToken = req.headers['jwt-user-token'] || req.query.token
 
     if (userToken) {
         try {

@@ -31,11 +31,19 @@ function upServer(error) {
     server.use(BASE_URL_FOR_ARTICLES, ARTICLES_ROUTER)
     server.use(BASE_URL_FOR_PHOTOS, PHOTOS_ROUTER)
     
+    server.use(errorHandler)
     server.use(endRequest)
     
     server.listen(PORT, () => {
         log('info', 'Running in ' + process.env.NODE_ENV + ' en el puerto ' + PORT);
     });
+}
+
+let errorHandler = function(err, req, res, next) {
+    console.log(err.stack)
+    log('error', 'HUBO UN ERROR (' + err.message + ')')
+    res.locals.status = 'bad'
+    next();
 }
 
 let endRequest = function(req, res) {

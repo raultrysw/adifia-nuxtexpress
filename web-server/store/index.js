@@ -3,20 +3,25 @@ import Vuex from 'vuex'
 import sessions from './sessions'
 import users from './users'
 import articles from './articles'
+import photos from './photos'
 
 const {encode, decode} = require('../../utils/user-token')
 
 const createStore = () => {
   return new Vuex.Store({
-      modules: {sessions, users, articles},
+      modules: {sessions, users, articles, photos},
       state: {
           currentTitle: 'Sin título',
-          loaded: false
+          loaded: false,
+          currentBar: ''
       },
       mutations: {
-        title(state, title) {
+        context(state, {title, bar}) {
             document.title = 'Adifia | ' + title
             state.currentTitle = title
+            state.currentBar = 'adifia-' + bar + '-toolbar'
+            console.log('current toolbar', state.currentBar);
+            
         }
       },
       getters: {

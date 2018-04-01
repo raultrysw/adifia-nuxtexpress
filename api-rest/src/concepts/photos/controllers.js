@@ -3,16 +3,13 @@ import Photo from './model'
 import { pathPhotos } from './storage/photos';
 
 const mPath = require('path')
-const gm = require('gm').subClass({imageMagick: false})
+const gm = require('gm').subClass({imageMagick: true})
 const fs = require('fs')
 
 export function create(req, res, next) {
     const {path, destination} = req.file;
     let photo = new Photo(req.body)
     
-    console.log('files: ',req.file);
-    
-
     let finalPath = mPath.join(destination, photo._id + '.jpg')
     gm(path).resize(500, 800).write(finalPath, (err) => {
         fs.unlink(path, err => {
@@ -33,25 +30,20 @@ export function retrieve(req, res, next) {
     let user = req.user
     let filter = {}
 
-    if (user) {
-        let theUserIsNotAdmin = user.pvLvl < 2
-        if (theUserIsNotAdmin) filter.valid = true
-    } else if (user === null) {
-        filter.valid = true
-    } else {}
+    let isAdmin = user && user.pvLvl >= 2
 
+    if(!isAdmin) filter.valid = true
+
+    console.log(filter);
+    
     Photo.find(filter).exec((err, docs) => {
         res.status(200)
         if (err) {
             res.locals.errors = err
             return next()
         }
-        let photos = docs.map(doc => {
-            let {title, _id, likes} = doc
-            return {title, _id, likes}
-        })
         res.locals = {
-            status: 'ok', docs: photos
+            status: 'ok', docs
         }
         next();
     })

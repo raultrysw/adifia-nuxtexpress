@@ -4,9 +4,10 @@
   "description": "",
   "main": "app-globals.js",
   "scripts": {
+    "setup-dirs": "mkdir -p api-rest/assets/img/{photos,articles,avatars}",
     "start-web-server": "cd web-server && npm run dev",
     "start-api-server": "cd api-rest && npm start",
-    "start": "concurrently \"npm run start-api-server\" \"npm run start-web-server\""
+    "start": "npm run setup-dirs && concurrently \"npm run start-api-server\" \"npm run start-web-server\""
   },
   "repository": {
     "type": "git",

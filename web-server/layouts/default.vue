@@ -3,8 +3,9 @@
     <adifia-header v-if="smallDevice" />
     <adifia-aside v-else />
     <main class="app__main main-start flex-column">
-      <header class="app__header" >
+      <header class="app__header main-justify cross-center" >
         <h1 class="app__title-page" >{{currentTitle}}</h1>
+        <div :is="currentBar"></div>
       </header>
       <section class="app__main-content" is="nuxt"></section>
     </main> 
@@ -16,8 +17,11 @@ import {mapState} from 'vuex'
 
 import AdifiaAside from '~/components/AdifiaAside.vue'
 import AdifiaHeader from '~/components/AdifiaHeader.vue'
+
+import AdifiaPhotoToolbar from '~/components/AdifiaPhotoToolbar.vue'
+
 export default {
-  components: {AdifiaAside, AdifiaHeader},
+  components: {AdifiaAside, AdifiaHeader, AdifiaPhotoToolbar},
   data() {
     return {
       smallDevice: false
@@ -32,7 +36,7 @@ export default {
     })
   },
   computed: {
-    ...mapState(['currentTitle', 'loaded']),
+    ...mapState(['currentTitle', 'loaded', 'currentBar']),
     rootAppStyles() {
       return {
         app: true,
@@ -60,6 +64,7 @@ $panelBackground: lighten($color-primary-0, 25%);
   height: 100vh;
   width: 100vw;
   &__header {
+    
     background: $panelBackground;
     box-shadow: 0px -3px 10px 0 darken($panelBackground, 10%) inset;
   }
@@ -111,5 +116,11 @@ table {
 .svg-inline--fa {
   cursor: pointer;
   margin: 0 .3em;
+}
+.fab-bar {
+    position: absolute;
+    bottom: 16px;
+    right: 16px;
+    font-size: 2em;
 }
 </style>

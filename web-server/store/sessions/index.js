@@ -19,6 +19,9 @@ let getters = {
     avatarUrl(state) {
         let defaultImg = 'http://localhost:7000/assets/img/avatars/default.png'
         return !state.user.avatar ? defaultImg : 'http://localhost:7000/assets/img/avatars/' + state.user._id + '.jpg'
+    },
+    token(state) {
+        return localStorage.getItem('jwt-token')
     }
 }
 

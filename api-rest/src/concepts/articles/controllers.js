@@ -58,7 +58,7 @@ export function create(req, res, next) {
 export function retrieve(req, res, next) {
     let query = Article.find()
     query.populate('author', ['name', 'surname', 'email', 'rol'])
-
+    
     let user = req.user
     
     let retrieveAll = req.query.all

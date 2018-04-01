@@ -37,7 +37,6 @@ export default {
             fd.append('email', email)
             fd.append('address', address)
             fd.append('photo', this.file)
-
             debugger
 
             axios.post(URI_PHOTO_CREATE, fd).then(response => {

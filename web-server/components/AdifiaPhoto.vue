@@ -5,7 +5,7 @@
             <img width="200px" height="300px" :src="srcPhoto" alt="">
         </div>
         <figcaption>
-            <button @click="makeValid">Hacer válido</button>
+            <button v-if="!photo.valid && isAdmin" @click="makeValid">Hacer válido</button>
             <button :style="style" @click="likeThePhoto">Me gusta ({{likesCount}})</button>
         </figcaption>
     </figure>
@@ -18,6 +18,9 @@ const URI_PHOTO_POST_LIKE = 'http://localhost:7000/api/photos/:id/like'
 
 export default {
   props: ['photo'],
+  mounted() {
+      debugger
+  },
   methods: {
       ...mapMutations('sessions', ['likesUser']),
       ...mapActions(['saveToken']),
@@ -32,7 +35,7 @@ export default {
       },
       makeValid() {
           const data = {valid: true}
-          axios.put(this.urlPutPhoto, data).then(response => {
+          axios.put(this.urlPutPhoto, data, {headers: this.headers}).then(response => {
               console.log('validated');
               
           })
@@ -41,8 +44,9 @@ export default {
   computed: {
       ...mapGetters(['headers']),
       ...mapState('sessions', ['user']),
+      ...mapGetters('sessions', ['isAdmin']),
       style() {
-          let likeThePhoto = this.user.photos.indexOf(this.photo._id) !== -1
+          let likeThePhoto = this.user && this.user.photos.indexOf(this.photo._id) !== -1
           let color = likeThePhoto ? 'blue' : 'black'
           return {color}
       },
