@@ -8,7 +8,9 @@
               <h3>Listado de artículos</h3>
               <adifia-article level="0" :article="article" v-for="(article, index) in articles" :key="index" />
           </template>
-        <p v-if="isVocal"><nuxt-link to="/articles/edit">Crear un articulo</nuxt-link></p>
+      </div>
+      <div class="fab-bar flex-column-reverse">
+          <nuxt-link class="fab-bar__icon" to="/articles/edit"><font-awesome-icon icon="pen-square" /></nuxt-link>
       </div>
   </section>
 </template>

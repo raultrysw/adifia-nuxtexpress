@@ -3,33 +3,46 @@
       <h2>Subiendo una foto</h2>
       <img ref="imgPhoto" src="" alt="">
         <rsw-form :submitHandler="sendForm" submitText="Enviar foto"  :errors="errors">
-            <rsw-live-preview-image height="15em" v-model="file" :atChange="updateImage" />
+            <rsw-live-preview-image height="15em" v-model="file" :defaultImg="photo" :atChange="updateImage" />
             <rsw-field-input text="Titulo" description="Título de la foto" v-model="title" />
-            <rsw-field-input text="Email" description="Email de contacto" v-model="email" />
-            <rsw-field-input text="Dirección" description="Dirección de la barrera" v-model="address" />
+            <rsw-field-group-input title="información de contacto">
+                <rsw-field-input ref="emailField" description="Email de contacto" v-model="email" />
+                <rsw-field-input description="Dirección de la barrera" v-model="address" />
+            </rsw-field-group-input>
         </rsw-form>
   </section>
 </template>
 <script>
 import axios from 'axios'
+import {mapState} from 'vuex'
+
 import rswLivePreviewImage from 'rsw-vue-components/components/RSWLivePreviewImage.vue'
 import rswForm from 'rsw-vue-components/components/RSWForm.vue'
 import rswFieldInput from 'rsw-vue-components/components/RSWFieldInput.vue'
+import rswFieldGroupInput from 'rsw-vue-components/components/RSWFieldGroupInput.vue'
 
 const URI_PHOTO_CREATE = 'http://localhost:7000/api/photos'
 export default {
-    components: {rswForm, rswFieldInput, rswLivePreviewImage},
+    components: {rswForm, rswFieldInput, rswLivePreviewImage, rswFieldGroupInput},
   data() {
       return {
           title: '',
           email: '',
           address: '',
           file: null,
-          errors: []
+          errors: [],
+          photo: 'http://localhost:7000/assets/img/default-picture-photo.jpeg'
       }
   },
-  created() {
+  mounted() {
       this.$store.commit('context', {title: 'Subiendo una foto', bar: ''})
+        if (this.user) {
+            this.email = this.user.email
+            this.$refs.emailField.$el.querySelector('input').disabled = true
+        }
+  },
+  computed: {
+      ...mapState('sessions', ['user'])
   },
   methods: {
         sendForm() {
@@ -37,7 +50,7 @@ export default {
 
             let fd = new FormData()
             fd.append('title', title)
-            fd.append('email', email)
+            fd.append('email', (this.user && this.user.email) || email)
             fd.append('address', address)
             fd.append('photo', this.file)
             debugger
@@ -50,9 +63,9 @@ export default {
             })
             
         },
-        updateImage(file, cb) {
+        updateImage(file, img) {
             this.file = file
-            cb()
+            this.photo = img
         }
   }
 }

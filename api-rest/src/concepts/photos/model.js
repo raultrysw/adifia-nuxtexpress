@@ -11,7 +11,7 @@ let schema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
-    emailSender: {
+    email: {
         type: String
     },
     likes: [{
