@@ -48,7 +48,8 @@ export default {
             showui: false,
             articles: [],
             reloadedFirstTime: false,
-            optionChoosen: '1'
+            optionChoosen: '1',
+            avatarUrl: ''
         }
     },
     mounted() {
@@ -57,9 +58,11 @@ export default {
         }
         this.$store.commit('context', {title: 'Tu página privada', bar: ''})
         this.showui = true
+
+        this.avatarUrl = this.user.avatar ? 'http://localhost:7000/assets/img/avatars/' + this.user._id + '.png' : 'http://localhost:7000/assets/img/avatars/default.png'
     },
     methods: {
-        pushImage(file, cb) {
+        pushImage(file, data) {
             let formData = new FormData()
             formData.append('avatar', file)
 
@@ -67,7 +70,7 @@ export default {
                 this.$store.state.sessions.user.avatar = true
 
                 this.$store.dispatch('saveToken')
-                cb()
+                this.avatarUrl = data
             })
         },
         
@@ -75,10 +78,7 @@ export default {
     computed: {
         ...mapState('sessions', ['user']),
         ...mapGetters('sessions', ['isVocal', 'isAdmin', 'avatarUrl']),
-        ...mapGetters(['headers']),
-        avatarUrl() {
-            return this.user.avatar ? 'http://localhost:7000/assets/img/avatars/' + this.user._id + '.png' : 'http://localhost:7000/assets/img/avatars/default.png'
-        }
+        ...mapGetters(['headers'])
     }
 }
 </script>
