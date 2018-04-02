@@ -2,11 +2,11 @@
     <figure>
         <div>
             <h3>{{photo.title}}</h3>
-            <img width="200px" height="300px" :src="srcPhoto" alt="">
+            <img width="100%" height="300px" :src="srcPhoto" alt="">
         </div>
-        <figcaption>
-            <button v-if="!photo.valid && isAdmin" @click="makeValid">Hacer válido</button>
-            <button :style="style" @click="likeThePhoto">Me gusta ({{likesCount}})</button>
+        <figcaption class="main-end">
+            <span v-if="!photo.valid && isAdmin" @click="makeValid"><font-awesome-icon icon="check" /></span>
+            <span :style="style" @click="likeThePhoto"><font-awesome-icon icon="thumbs-up" />{{likesCount}}</span>
         </figcaption>
     </figure>
 </template>
@@ -36,7 +36,7 @@ export default {
           const data = {valid: true}
           this.$http.put(this.urlPutPhoto, data, {headers: this.headers}).then(response => {
               console.log('validated');
-              
+              this.$emit('reload')
           })
       }
   },

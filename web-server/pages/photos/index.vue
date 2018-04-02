@@ -2,7 +2,7 @@
   <section>
       <h2>Foto denuncia <span v-if="showingAll">(Viendo todas las fotos)</span></h2>
       <main class="grid-container grid-2345">
-          <figure v-for="(photo, index) in photos" :key="index" is="adifia-photo" :photo="photo"></figure>
+          <figure @reload="reloadAll" v-for="(photo, index) in photos" :key="index" is="adifia-photo" :photo="photo"></figure>
       </main>
       <div class="fab-bar flex-column-reverse">
           <nuxt-link class="fab-bar__icon" to="/photos/create"><font-awesome-icon icon="arrow-up" /></nuxt-link>
@@ -22,7 +22,8 @@ export default {
     components: {AdifiaPhoto, rswToggleButton},
     data() {
         return {
-            photos: []
+            photos: [],
+            viewAll: false
         }
     },
     created() {
@@ -36,17 +37,24 @@ export default {
         ...mapState('photos', ['viewAll']),
         ...mapGetters(['headers']),
         ...mapGetters('sessions', ['token', 'isAdmin']),
+        URL() {
+            let URL = this.viewAll ? URI_PHOTO_RECOVERY + '?all=true&token=' + this.token : URI_PHOTO_RECOVERY
+            return URL
+        },
         showingAll() {
-            let viewAll = this.$store._modules.root._children.photos.state.viewAll
-            let URL = viewAll ? URI_PHOTO_RECOVERY + '?all=true&token=' + this.token : URI_PHOTO_RECOVERY
-            console.log('URL:', URL);
+            this.viewAll = this.$store._modules.root._children.photos.state.viewAll
             this.photos = []
-            
-            this.$http.get(URL).then(response => {
+            this.reloadAll()
+            return this.viewAll
+        }
+    },
+    methods: {
+        reloadAll() {
+            this.photos = []
+            debugger
+            this.$http.get(this.URL).then(response => {
                 this.photos = response.data.docs
             })
-
-            return viewAll
         }
     }
 }

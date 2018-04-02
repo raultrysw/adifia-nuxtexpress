@@ -18,3 +18,4 @@
 ## Errores conocidos
 
 - [ ] No se recarga el avatar al cambiarlo
+- [ ] No se quita el botón de validar nada mas validar la foto
