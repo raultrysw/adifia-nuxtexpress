@@ -60,6 +60,7 @@ export default {
         this.showui = true
 
         this.avatarUrl = this.user.avatar ? 'http://localhost:7000/assets/img/avatars/' + this.user._id + '.png' : 'http://localhost:7000/assets/img/avatars/default.png'
+        
     },
     methods: {
         pushImage(file, data) {

@@ -33,15 +33,30 @@
         </section>
         <section>
             <div>
-                <h1 class="text text-title"></h1>
+                <h1 class="text text-title">Administradores de adifia</h1>
+                <ul class="no-list">
+                    <li v-for="(admin, index) in administrators" :data-aaa="index" :key="index">
+                        <h2>{{admin.name}} {{admin.surname}}</h2>
+                        <p>Es {{ROLS[admin.pvLvl]}}</p>
+                    </li>
+                </ul>
             </div>
         </section>
   </section>
 </template>
 <script>
+import {ROLS} from '../../settings.js'
 export default {
+    data() {
+        return {
+            administrators: [], ROLS
+        }
+    },
     mounted() {
         this.$store.commit('context', {title:'Acerca de adifia', bar: ''})
+        this.$http.get('/members/?onlyAdmin=true').then(response => {
+            this.administrators = response.data.users
+        })
     }
 }
 </script>

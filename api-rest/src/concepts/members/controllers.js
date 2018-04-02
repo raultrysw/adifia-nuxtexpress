@@ -37,7 +37,13 @@ export function create(req, res, next) {
 }
 
 export function retrieve(req, res, next) {
-    Member.find({}, (err, docs) => {
+    let query = Member.find({})
+
+    if (req.query.onlyAdmin === 'true') {
+        query.where('pvLvl', {$gte: 2})
+    }
+
+    query.exec((err, docs) => {
         res.status(200)
         if (err) {
             res.locals.errors = err
