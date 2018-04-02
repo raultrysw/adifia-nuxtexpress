@@ -7,18 +7,18 @@
 import AdifiaArticle from '~/components/AdifiaArticle'
 import axios from 'axios'
 
-let URI_TO_ARTICLES = 'http://localhost:7000/api/articles/:id'
+let URI_TO_ARTICLES = '/articles/:id'
 
 export default {
     components: {AdifiaArticle},
     mounted() {
-         axios.get(this.uriArticle).then(response => {
-             this.article = response.data.article
-             let title = 'Blog - ' + this.article.title
+        this.$http.get(this.uriArticle).then(response => {
+            this.article = response.data.article
+            let title = 'Blog - ' + this.article.title
 
-             this.$store.commit('context', {title, bar: ''})
-             this.loaded = true
-         })
+            this.$store.commit('context', {title, bar: ''})
+            this.loaded = true
+        })
     },
     computed: {
         uriArticle() {

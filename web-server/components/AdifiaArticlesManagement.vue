@@ -15,7 +15,6 @@
 
 <script>
 import {mapGetters, mapState} from 'vuex'
-import axios from 'axios'
 import AdifiaArticleManager from '~/components/AdifiaArticleManager'
 
 export default {
@@ -33,18 +32,18 @@ export default {
     },
   methods: {
       reloadChanges(cb) {
-            axios.get(this.ARTICLES_URI).then(response => {
-                this.articles = []
-                this.articles = response.data.articles
-                cb();
-            })
+          this.articles = []
+          this.$http.get(this.ARTICLES_URI).then(response => {
+              this.articles = response.data.articles
+              cb();
+          })
         }
   },
   computed: {
         ...mapGetters('sessions', ['isVocal', 'isAdmin']),    
         ...mapGetters(['headers']),          
       ARTICLES_URI() {
-            return 'http://localhost:7000/api/articles?all=true&token=' + this.headers['jwt-user-token']
+            return '/articles?all=true&token=' + this.headers['jwt-user-token']
         },
         allArePublished() {
             let articlesPublished = this.articles.filter(article => article.state === 2)

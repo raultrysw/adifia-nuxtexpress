@@ -15,7 +15,7 @@ import axios from 'axios'
 
 import AdifiaMemberManager from '~/components/AdifiaMemberManager.vue'
 
-const MEMBERS_URI = 'http://localhost:7000/api/members/'
+const MEMBERS_URI = '/members/'
 
 export default {
     components: {AdifiaMemberManager},
@@ -25,11 +25,9 @@ export default {
         }
     },
   mounted() {
-      axios.get(MEMBERS_URI).then(response => {
+      this.$http.get(MEMBERS_URI).then(response => {
           const {users} = response.data
           this.members = users
-          console.log('usuarios',users);
-          
       })
   }
 }

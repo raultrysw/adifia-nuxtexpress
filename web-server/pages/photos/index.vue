@@ -15,8 +15,8 @@ import {mapGetters, mapState} from 'vuex'
 import AdifiaPhoto from '~/components/AdifiaPhoto.vue'
 import rswToggleButton from 'rsw-vue-components/components/RSWToggleInput.vue'
 
-const URI_PHOTO_CREATE = 'http://localhost:7000/api/photos'
-const URI_PHOTO_RECOVERY = 'http://localhost:7000/api/photos'
+const URI_PHOTO_CREATE = '/photos'
+const URI_PHOTO_RECOVERY = '/photos'
 
 export default {
     components: {AdifiaPhoto, rswToggleButton},
@@ -42,7 +42,7 @@ export default {
             console.log('URL:', URL);
             this.photos = []
             
-            axios.get(URL).then(response => {
+            this.$http.get(URL).then(response => {
                 this.photos = response.data.docs
             })
 

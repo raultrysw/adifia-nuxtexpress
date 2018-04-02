@@ -27,14 +27,14 @@ export default {
           return ROLS[this.member.pvLvl]
       },
         MEMBERS_API_URL() {
-            return 'http://localhost:7000/api/members/' + this.member._id
+            return '/members/' + this.member._id
         },
       ...mapGetters(['headers'])
   },
   methods: {
       updateLvl(e) {
           let lvl = e.target.value
-          axios.put(this.MEMBERS_API_URL, {pvLvl: lvl}, {headers: this.headers}).then(response => {
+          this.$http.put(this.MEMBERS_API_URL, {pvLvl: lvl}, {headers: this.headers}).then(response => {
               if (response.data.status === 'ok') {
                   this.member.pvLvl = lvl;
               }

@@ -11,23 +11,4 @@ const state = {
     }
 }
 
-const actions = {
-    getArticles({}, cb) {
-        axios.get(URI_TO_ARTICLES_RECOVERY).then(cb)
-    },
-    sendArticle({rootGetters, state}, {uri, method, cb}) {
-        let {headers} = rootGetters
-        let article = state.newArticle
-        let uriToPoint = uri || URI_TO_ARTICLES_CREATION
-
-        axios[method](uriToPoint, article, {
-            headers: rootGetters.headers
-        }).then((response) => {
-            state.newArticle.title = ''
-            state.newArticle.body = ''
-            cb(response)
-        })
-    }
-}
-
-export default {namespaced, actions, state}
+export default {namespaced, state}

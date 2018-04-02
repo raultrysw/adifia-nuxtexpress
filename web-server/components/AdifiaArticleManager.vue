@@ -15,7 +15,6 @@
     </tr>
 </template>
 <script>
-import axios from 'axios'
 import {mapGetters} from 'vuex'
 
 let states = ['draft', 'sended', 'published']
@@ -30,7 +29,7 @@ const days = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Do
 const months = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
     'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
 
-const URI_TO_ARTICLE = 'http://localhost:7000/api/articles/:id'
+const URI_TO_ARTICLE = '/articles/:id'
 
 export default {
   props: ['article'],
@@ -81,17 +80,17 @@ export default {
   },
   methods: {
         removeArticle() {
-            axios.delete(this.uriArticle, {headers:this.headers}).then(response => {
+            this.$http.delete(this.uriArticle, {headers:this.headers}).then(response => {
                 this.$emit('change')
             })
         },
         sendToModerate() {
-            axios.put(this.uriArticle, {state: 1}, {headers:this.headers}).then(response => {
+            this.$http.put(this.uriArticle, {state: 1}, {headers:this.headers}).then(response => {
                 this.$emit('change')
             })
         },
         sendToPublish() {
-            axios.put(this.uriArticle, {state: 2}, {headers:this.headers}).then(response => {
+            this.$http.put(this.uriArticle, {state: 2}, {headers:this.headers}).then(response => {
                 this.$emit('change')
             })
         }

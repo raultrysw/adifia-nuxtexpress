@@ -1,4 +1,6 @@
-# Cosas que faltan por hacer
+# Adifia (notas)
+
+## Cosas que faltan por hacer
 
 - [x] Crear set de campos
 - [x] Condicionar la pagina create para que se puedan editar artículos ahí y cambiarla al nombre edit
@@ -11,3 +13,8 @@
 - [ ] Preparar un artículo para que sea una evento
 - [ ] Sacar los últimos artículos y las fotos con mas likes en la página principal
 - [ ] Sacar los administradores de adifia en la página acerca de
+- [ ] Pedir confirmación con un modal al eliminar un artículo
+
+## Errores conocidos
+
+- [ ] No se recarga el avatar al cambiarlo

@@ -13,8 +13,8 @@
 <script>
 import axios from 'axios'
 import {mapGetters, mapState, mapMutations, mapActions} from 'vuex'
-const URI_PHOTO_CREATE = 'http://localhost:7000/api/photos/:id'
-const URI_PHOTO_POST_LIKE = 'http://localhost:7000/api/photos/:id/like'
+const URI_PHOTO_CREATE = '/photos/:id'
+const URI_PHOTO_POST_LIKE = '/photos/:id/like'
 
 export default {
   props: ['photo'],
@@ -25,8 +25,7 @@ export default {
       ...mapMutations('sessions', ['likesUser']),
       ...mapActions(['saveToken']),
       likeThePhoto() {
-          let req = axios.put(this.urlPutLikePhoto, {}, {headers: this.headers})
-          console.log('peticion faabricada',req);
+          let req = this.$http.put(this.urlPutLikePhoto, {}, {headers: this.headers})
           req.then(response => {
               this.photo.likes = response.data.likesPhotos
               this.likesUser(response.data.likesUser)
@@ -35,7 +34,7 @@ export default {
       },
       makeValid() {
           const data = {valid: true}
-          axios.put(this.urlPutPhoto, data, {headers: this.headers}).then(response => {
+          this.$http.put(this.urlPutPhoto, data, {headers: this.headers}).then(response => {
               console.log('validated');
               
           })

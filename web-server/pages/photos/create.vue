@@ -21,7 +21,7 @@ import rswForm from 'rsw-vue-components/components/RSWForm.vue'
 import rswFieldInput from 'rsw-vue-components/components/RSWFieldInput.vue'
 import rswFieldGroupInput from 'rsw-vue-components/components/RSWFieldGroupInput.vue'
 
-const URI_PHOTO_CREATE = 'http://localhost:7000/api/photos'
+const URI_PHOTO_CREATE = '/photos'
 export default {
     components: {rswForm, rswFieldInput, rswLivePreviewImage, rswFieldGroupInput},
   data() {
@@ -53,15 +53,10 @@ export default {
             fd.append('email', (this.user && this.user.email) || email)
             fd.append('address', address)
             fd.append('photo', this.file)
-            debugger
-
-            axios.post(URI_PHOTO_CREATE, fd).then(response => {
-                console.log('Petición hecha', response);
-                
-                console.log(title, email, address, this.file); 
+            
+            this.$http.post(URI_PHOTO_CREATE, fd).then(response => {
                 this.$router.push('/photos')
             })
-            
         },
         updateImage(file, img) {
             this.file = file

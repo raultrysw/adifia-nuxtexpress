@@ -32,7 +32,6 @@
     </section>
 </template>
 <script>
-import axios from 'axios'
 import {mapGetters, mapState} from 'vuex'
 
 import AdifiaArticlesManagement from '~/components/AdifiaArticlesManagement'
@@ -40,7 +39,7 @@ import AdifiaMemebersManagement from '~/components/AdifiaMembersManagement'
 
 import rswLivePreviewImage from 'rsw-vue-components/components/RSWLivePreviewImage.vue'
 
-const MEMBERS_URI = 'http://localhost:7000/api/members/serv/avatar'
+const MEMBERS_URI = '/members/serv/avatar'
 
 export default {
     components: {AdifiaArticlesManagement, rswLivePreviewImage, AdifiaMemebersManagement},
@@ -63,12 +62,8 @@ export default {
         pushImage(file, cb) {
             let formData = new FormData()
             formData.append('avatar', file)
-            debugger
-            console.log('Enviando peticion');
-            
-            axios.put(MEMBERS_URI, formData, {headers: this.$store.getters.headers}).then(response => {
-                console.log('respuestaa recibida', response);
-                
+
+            this.$http.put(MEMBERS_URI, formData, {headers: this.$store.getters.headers}).then(response => {
                 this.$store.state.sessions.user.avatar = true
 
                 this.$store.dispatch('saveToken')

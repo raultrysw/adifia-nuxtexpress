@@ -17,6 +17,8 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 import AdifiaArticle from '~/components/AdifiaArticle'
+
+let URI_ARTICLES_GET = '/articles'
 export default {
   components: {AdifiaArticle},
   data() {
@@ -32,11 +34,15 @@ export default {
     ...mapGetters("sessions", ["isVocal"])
   },
   mounted() {
-    this.$store._actions["articles/getArticles"][0](response => {
-      let { articles } = response.data;
-      this.articles = articles;
-      this.loaded = true;
-    });
+    debugger
+    this.$http.get(URI_ARTICLES_GET).then(response => {
+        let { articles } = response.data;
+        this.articles = articles;
+        this.loaded = true;
+
+    })
+    // this.$http.get(URI_ARTICLES_GET).then(response => {
+    // })
   },
   mehtods: {
     ...mapActions("articles", ["getArticles"])

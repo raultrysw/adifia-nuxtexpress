@@ -19,6 +19,8 @@ import rswForm from 'rsw-vue-components/components/RSWForm.vue'
 import rswFieldInput from 'rsw-vue-components/components/RSWFieldInput.vue'
 import rswFiledInputGroup from 'rsw-vue-components/components/RSWFieldGroupInput.vue'
 
+let REGISTER_URL = '/members'
+
 export default {
     components: {
         rswForm, rswFieldInput, rswFiledInputGroup
@@ -40,18 +42,15 @@ export default {
         if (this.$store.state.logged) {
             return this.$router.push('/')
         }
-        this.$store.commit('title',{title: 'Registrate en Adifia', bar: ''})  
+        this.$store.commit('context',{title: 'Registrate en Adifia', bar: ''})  
         this.showUi = true    
     },
     methods: {
-        ...mapActions('users', ['register']),
         registerUser() {
             const {name, surname, email, password} = this
             const user = {name, surname, email, password}
             
-            this.register({user}).then(response => {
-                console.log(response);
-                
+            this.$http.post(REGISTER_URL, user).then(response => {
                 if (response.data.status === 'ok') this.$router.push('/')
                 else this.errors = response.data.errors;
             })

@@ -23,9 +23,9 @@
 <script>
 import Editor from '@tinymce/tinymce-vue';
 import {mapActions, mapGetters} from 'vuex';
-import axios from 'axios'
 
-const URI_TO_UPLOAD_ARTICLES_IMAGES = 'http://localhost:7000/api/articles/serv/uploadimage'
+const URI_TO_UPLOAD_ARTICLES_IMAGES = '/articles/serv/uploadimage'
+const URI_TO_POST_ARTICLES = '/articles/'
 
 import rswForm from 'rsw-vue-components/components/RSWForm.vue'
 import rswFieldInput from 'rsw-vue-components/components/RSWFieldInput.vue'
@@ -87,7 +87,7 @@ export default {
                 this.$store.commit('context', {title: titlePage, bar: ''})
                 this.restoreArticle(id || 'new')
             } else {
-                axios.get(this.articleRecoveryURI).then(response => {
+                this.axios.get(this.articleRecoveryURI).then(response => {
                     const {title, body} = response.data.article
                     titlePage = 'Editando el artículo `' + title + '`'
                     this.title = title
@@ -103,10 +103,11 @@ export default {
     },
     computed: {
         ...mapGetters({
-            isVocal: 'sessions/isVocal'
+            isVocal: 'sessions/isVocal',
+            headers: 'headers'
         }),
         articleRecoveryURI() {
-            return 'http://localhost:7000/api/articles/' + this.$route.query.id
+            return '/articles/' + this.$route.query.id
         },
         title: {
             get() {return this.$store.state.articles.newArticle.title},
@@ -146,21 +147,27 @@ export default {
         submitArticle() {
             const cb = response => {
                 let {doc, errors} = response.data
-                debugger
                 if (errors) this.errors = errors
                 else {
                     console.log('Se creo el doc:', doc);
                     this.dropArticle(this.$route.query.id || 'new')
                     this.$router.push('/articles')
+                    this.title = ''
+                    this.body = ''
                 }
             }
             
             let isNewPost = this.$route.query.id === undefined
-            let payload = {cb}
-            if (!isNewPost) payload.uri = this.articleRecoveryURI
-            payload.method = isNewPost ? 'post' : 'put'
+            let uri = isNewPost ? URI_TO_POST_ARTICLES : this.articleRecoveryURI
+            let method = isNewPost ? 'post' : 'put'
             
-            this.$store._actions['articles/sendArticle'][0](payload)
+            let newArticle = {
+                title: this.title,
+                body: this.body
+            }
+            let options = {headers: this.headers}
+
+            this.$http[method](uri, newArticle, options).then(cb)
         }
     }
 }
