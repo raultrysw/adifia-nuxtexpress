@@ -1,9 +1,9 @@
 <template>
-  <div :class="rootAppStyles" v-if="loaded">
+  <div class="app" v-if="loaded">
     <adifia-header v-if="smallDevice" />
     <adifia-aside v-else />
-    <main class="app__main main-start flex-column">
-      <header class="app__header main-justify cross-center" >
+    <main class="app__main">
+      <header class="app__header" >
         <h1 class="app__title-page" >{{currentTitle}}</h1>
         <div v-if="currentBar && isAdmin" :is="currentBar"></div>
       </header>
@@ -46,24 +46,17 @@ export default {
   },
   computed: {
     ...mapState(['currentTitle', 'loaded', 'currentBar']),
-    ...mapGetters('sessions', ['isAdmin']),
-    rootAppStyles() {
-      return {
-        app: true,
-        'main-start': !this.smallDevice
-      }
-    }
+    ...mapGetters('sessions', ['isAdmin'])
   }
 }
 </script>
 
 
 <style lang="scss">
-@import 'ed-grid/css/ed-grid.min.css';
 @import '../scss/colors.scss';
 
-$panelBackground: lighten($color-primary-0, 25%);
-
+$aside-width: 300px;
+$header-height: 3em;
 
 * {
   padding: 0;
@@ -72,25 +65,22 @@ $panelBackground: lighten($color-primary-0, 25%);
 }
 .app {
   height: 100vh;
-  width: 100vw;
   &__header {
-    margin-bottom: 1em;
-    background: $panelBackground;
-    box-shadow: 0px -3px 10px 0 darken($panelBackground, 10%) inset;
+    height: $header-height;
+    border-bottom: 1px solid;
   }
   &__aside {
-    background: $panelBackground;
-    @media screen and (min-width: 1024px) {
-      flex-basis: 250px;
-    }
+    position: fixed;
+    height: 100%;
+    width: $aside-width;
+    float: left;
+    border-right: 1px solid;
   }
   &__main {
-    @media screen and (min-width: 1024px) {
-      flex-basis: calc(100% - 250px);
-      &-content {
-        min-width: 75vw;
-        margin: 0em auto;
-      }
+    margin-left: $aside-width;
+    &-content {
+      margin-left: 20px;
+      margin-right: 20px;
     }
   }
   &__title {
