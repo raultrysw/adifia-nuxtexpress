@@ -1,11 +1,9 @@
 <template>
   <section>
-      <h2>Blog</h2>
-      <h3 v-if="!loaded">Cargando artículos...</h3>
+      <h2 v-if="!loaded">Cargando artículos...</h2>
       <div v-else>
-          <h4 v-if="!articles.length">No hay ningun artículo publicado</h4>
+          <h2 v-if="!articles.length">No hay ningun artículo publicado</h2>
           <template v-else>
-              <h3>Listado de artículos</h3>
               <adifia-article level="0" :article="article" v-for="(article, index) in articles" :key="index" />
           </template>
       </div>

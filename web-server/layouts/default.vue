@@ -54,6 +54,7 @@ export default {
 
 <style lang="scss">
 @import '../scss/colors.scss';
+@import url('https://fonts.googleapis.com/css?family=Lato:300,400,700|Slabo+27px');
 
 $aside-width: 300px;
 $header-height: 3em;
@@ -62,6 +63,12 @@ $header-height: 3em;
   padding: 0;
   margin: 0;
   box-sizing: border-box !important;
+}
+body {
+  font-family: 'Lato', sans-serif;
+}
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Slabo 27px', serif;
 }
 .app {
   height: 100vh;
