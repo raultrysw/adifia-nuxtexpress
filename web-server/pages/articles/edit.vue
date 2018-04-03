@@ -1,22 +1,31 @@
 <template>
     <rsw-form v-if="show" :submitHandler="submitArticle" submitText="Enviar artículo" :errors="errors">
-        <div class="main-start" v-if="isEvent">
-            <div>google maps</div>
-            <div>
-                <rsw-field-group-input title="Información del evento">
-                    <rsw-field-input text="Dia">
-                        <input type="date" />
-                    </rsw-field-input>
-                    <rsw-field-input text="Hora">
-                        <input type="time" />
-                    </rsw-field-input>
-                </rsw-field-group-input>
-            </div>
-        </div>
         <rsw-field-group-input title="Título del artículo">
             <rsw-field-input :value="title" v-model="title" description="Pon el título del artículo" />
         </rsw-field-group-input>
         <editor :init="initmce" v-model="body" />
+        <rsw-toggle-input :state="isEvent" v-model="isEvent">Es un evento</rsw-toggle-input>
+        <div v-if="isEvent">
+            <h2>Información del evento</h2>
+            <div class="main-start">
+                <div style="width: 70%">
+                    <rsw-location-picker :lat="lat" :lng="lng" :text="text" v-model="location" title="Lugar del evento" />
+                </div>
+                <div style="width: 30%">
+                    <rsw-field-group-input title="Datos básicos del evento" vertical="true">
+                        <rsw-field-input text="Dia">
+                            <input v-model="date" type="date" />
+                        </rsw-field-input>
+                        <rsw-field-input text="Hora">
+                            <input  v-model="time" type="time" />
+                        </rsw-field-input>
+                        <rsw-field-input text="story">
+                            <textarea v-model="story"></textarea>
+                        </rsw-field-input>
+                    </rsw-field-group-input>
+                </div>
+            </div>
+        </div>
     </rsw-form>
 </template>
 
@@ -30,6 +39,8 @@ const URI_TO_POST_ARTICLES = '/articles/'
 import rswForm from 'rsw-vue-components/components/RSWForm.vue'
 import rswFieldInput from 'rsw-vue-components/components/RSWFieldInput.vue'
 import rswFieldGroupInput from 'rsw-vue-components/components/RSWFieldGroupInput.vue'
+import rswLocationPicker from 'rsw-vue-components/components/RSWLocationPicker.vue'
+import rswToggleInput from 'rsw-vue-components/components/RSWToggleInput.vue'
 
 const init = {
     toolbar: ['insertimage'],
@@ -64,14 +75,21 @@ const init = {
 }
 
 export default {
-    components: {Editor, rswForm, rswFieldInput, rswFieldGroupInput},
+    components: {Editor, rswForm, rswFieldInput, rswFieldGroupInput, rswLocationPicker, rswToggleInput},
     layout: 'default',
     data() {
         return {
             initmce: init,
             show: false,
             errors: [],
-            isEvent: false
+            isEvent: false,
+            time: '',
+            date: '',
+            story: '',
+            location: '',
+            lat: '',
+            lng: '',
+            text: ''
         }
     },
     created() {
@@ -88,11 +106,17 @@ export default {
                 this.restoreArticle(id || 'new')
             } else {
                 this.axios.get(this.articleRecoveryURI).then(response => {
-                    const {title, body} = response.data.article
+                    const {title, body, isEvent, time, date, story, location} = response.data.article
                     titlePage = 'Editando el artículo `' + title + '`'
+                    this.locationEvent = location
+                    this.setLocation()
                     this.title = title
                     this.body = body
                     this.$store.commit('context', {title: titlePage, bar: ''})
+                    this.isEvent = isEvent
+                    this.time = time
+                    this.date = date
+                    this.story = story
                     this.show = true
                 })
             }
@@ -106,20 +130,28 @@ export default {
             isVocal: 'sessions/isVocal',
             headers: 'headers'
         }),
+        locationExtracted() {
+            const {lat, lng, placeDescription} = this.location
+            
+            const latitud = typeof lat === 'number' ? lat : lat()
+            const longitud = typeof lng === 'number' ? lng : lng()
+            
+            return latitud + ';' + longitud + ';' + placeDescription
+        },
         articleRecoveryURI() {
             return '/articles/' + this.$route.query.id
         },
         title: {
             get() {return this.$store.state.articles.newArticle.title},
             set(value) {
-                this.saveInLocal('title', value)
+                if (!this.$route.query.id) this.saveInLocal('title', value)
                 this.$store.state.articles.newArticle.title = value
             },
         },
         body: {
             get() {return this.$store.state.articles.newArticle.body},
             set(value) {
-                this.saveInLocal('body', value)
+                if (!this.$route.query.id) this.saveInLocal('body', value)
                 this.$store.state.articles.newArticle.body = value
             },
         }
@@ -128,8 +160,7 @@ export default {
         ...mapActions('articles', 'sendArticle'),
         saveInLocal(articleKey, value) {
             let localArticles = JSON.parse(localStorage.getItem('savedArticles'))
-            let key = this.$route.query.id || 'new'
-            localArticles[key][articleKey] = value
+            localArticles['new'][articleKey] = value
             localStorage.setItem('savedArticles', JSON.stringify(localArticles))
         },
         restoreArticle(id) {
@@ -143,6 +174,13 @@ export default {
             let localArticles = JSON.parse(localStorage.getItem('savedArticles'))
             localArticles[id] = {}
             localStorage.setItem('savedArticles', JSON.stringify(localArticles))
+        },
+        setLocation() {
+            debugger
+            let [lat, lng, text] = this.locationEvent.split(';')
+            this.lat = Number(lat)
+            this.lng = Number(lng)
+            this.text = text
         },
         submitArticle() {
             const cb = response => {
@@ -163,8 +201,20 @@ export default {
             
             let newArticle = {
                 title: this.title,
-                body: this.body
+                body: this.body,
+                isEvent: this.isEvent
             }
+            
+            if (this.isEvent) {
+                newArticle['time'] = this.time
+                newArticle['date'] = this.date
+                newArticle['story'] = this.story
+                newArticle['location'] = this.locationExtracted
+            }
+
+            debugger
+
+
             let options = {headers: this.headers}
 
             this.$http[method](uri, newArticle, options).then(cb)

@@ -21,6 +21,22 @@ let schema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
+    isEvent: {
+        type: Boolean,
+        default: false
+    },
+    time: {
+        type: String
+    },
+    date: {
+        type: String
+    },
+    story: {
+        type: String
+    },
+    location: {
+        type: String
+    },
     state: {
         type: Number,
         enum: [0, 1, 2],

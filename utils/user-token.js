@@ -11,7 +11,11 @@ function recoverUser(req, res, next) {
     if (userToken) {
         try {
             req.user = decode(userToken)
-            
+            req.loginLvl = {
+                isAdmin: req.user.pvLvl >= 2,
+                isVocal: req.user.pvLvl >= 1,
+                isPartner: req.user.pvLvl >= 0
+            }
         } catch (error) {
             console.log('El usuario no se pudo descifrar');
         } finally {

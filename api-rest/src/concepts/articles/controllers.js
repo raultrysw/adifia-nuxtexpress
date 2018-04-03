@@ -1,7 +1,9 @@
 import logFactory from '../../utils/log'
 import Member from '../members/model'
 import Article from './model'
+import {pipe} from '../../utils/pipeObjects'
 import {getMongoDocumentErrors} from '../../utils/controllerUtils'
+import {filterFor} from './filter'
 
 
 const log = logFactory('ARTICLES CONTROLLER')
@@ -25,8 +27,7 @@ export function get(req, res, next) {
 export function create(req, res, next) {
     let {email} = req.user
     
-    const {title, body} = req.body
-    let article = new Article({title, body})
+    let article = new Article(req.body)
 
     Member.findOne({email}, (err, userWriting) => {
         article.author = userWriting
@@ -47,34 +48,16 @@ export function create(req, res, next) {
             }
         })
     })
-    
 }
-
 
 /**
  * Si es vocal ver articulos propios
  * Si es dministror ver artículos propios o con estado a uno
  */
+
 export function retrieve(req, res, next) {
-    let query = Article.find()
+    let query = filterFor(req)
     query.populate('author', ['name', 'surname', 'email', 'rol'])
-    
-    let user = req.user
-    
-    let retrieveAll = req.query.all
-    if (retrieveAll && user) {
-        let isAdmin = user.pvLvl >= 2
-        let isVocal = user.pvLvl >= 1
-
-        if (isVocal) {
-            console.log('vocal');
-            
-            if (isAdmin) query.where('state').or([{author: user._id}, {state: {$gte: 1}}])
-            else query.where('author').equals(user._id)
-        }
-    } else query.where('state').equals(2)
-    
-
     query.sort({'createdAt': -1})
             .exec((err, articles) => {
         res.status(200)
