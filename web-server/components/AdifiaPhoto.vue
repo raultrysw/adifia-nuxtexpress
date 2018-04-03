@@ -1,12 +1,16 @@
 <template>
-    <figure>
+    <figure class="photo">
         <div>
-            <h3>{{photo.title}}</h3>
+            <h3 class="photo__title">{{photo.title}}</h3>
             <img width="100%" height="300px" :src="srcPhoto" alt="">
         </div>
-        <figcaption class="main-end">
-            <span v-if="!photo.valid && isAdmin" @click="makeValid"><font-awesome-icon icon="check" /></span>
-            <span :style="style" @click="likeThePhoto"><font-awesome-icon icon="thumbs-up" />{{likesCount}}</span>
+        <figcaption>
+            <p class="photo__descriptions">{{photo.description}}</p>
+            <p><a :href="linkMaps" target="_blank">Ver en googleMaps</a></p>
+            <div class="main-end photo__controls">
+                <span v-if="!photo.valid && isAdmin" @click="makeValid"><font-awesome-icon icon="check" /></span>
+                <span :style="style" @click="likeThePhoto"><font-awesome-icon icon="thumbs-up" />{{likesCount}}</span>
+            </div>
         </figcaption>
     </figure>
 </template>
@@ -44,6 +48,10 @@ export default {
       ...mapGetters(['headers']),
       ...mapState('sessions', ['user']),
       ...mapGetters('sessions', ['isAdmin']),
+      linkMaps() {
+          let [lat, lng] = this.photo.location.split(';');
+            return `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`
+      },
       style() {
           let likeThePhoto = this.user && this.user.photos.indexOf(this.photo._id) !== -1
           let color = likeThePhoto ? 'blue' : 'black'
@@ -64,6 +72,4 @@ export default {
   }
 }
 </script>
-<style lang="scss">
-
-</style>
+<style lang="scss"></style>

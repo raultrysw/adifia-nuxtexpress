@@ -18,10 +18,10 @@ let schema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Member'
     }],
-    address: {
-        type: String,
-        required: [true, 'Sin la dirección no se sabe donde esta el escalón']
-    }
+    location: {
+        type: String
+    },
+    description: ''
 })
 
 class MemberClass {

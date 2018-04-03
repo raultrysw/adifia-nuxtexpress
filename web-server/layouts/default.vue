@@ -3,7 +3,7 @@
     <adifia-header v-if="smallDevice" />
     <adifia-aside v-else />
     <main class="app__main">
-      <header class="app__header" >
+      <header class="main-justify cross-center app__header" >
         <h1 class="app__title-page" >{{currentTitle}}</h1>
         <div v-if="currentBar && isAdmin" :is="currentBar"></div>
       </header>
@@ -54,6 +54,7 @@ export default {
 
 <style lang="scss">
 @import '../scss/colors.scss';
+@import 'ed-grid/css/ed-grid.min.css';
 @import url('https://fonts.googleapis.com/css?family=Lato:300,400,700|Slabo+27px');
 
 $aside-width: 300px;
