@@ -3,7 +3,7 @@ import Member from '../members/model'
 import Article from './model'
 import {pipe} from '../../utils/pipeObjects'
 import {getMongoDocumentErrors} from '../../utils/controllerUtils'
-import {filterFor} from './filter'
+import {filterFor} from './query-builder'
 
 
 const log = logFactory('ARTICLES CONTROLLER')
@@ -56,6 +56,8 @@ export function create(req, res, next) {
  */
 
 export function retrieve(req, res, next) {
+    console.log(req.user);
+    
     let query = filterFor(req)
     query.populate('author', ['name', 'surname', 'email', 'rol'])
     query.sort({'createdAt': -1})

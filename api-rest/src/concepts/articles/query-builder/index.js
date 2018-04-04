@@ -1,13 +1,16 @@
-import Article from './model'
-import {pipe} from '../../utils/pipeObjects'
+import Article from '../model'
+import {pipe} from '../../../utils/pipeObjects'
+import {theAuthor, eachAuthorArticleState, isEvent, stateAt2} from './filters'
 
-function buildQuery({isJustVocal, isAdmin, notPutEvents, user}) {
+function buildQuery({isJustVocal, isAdmin, notPutEvents, user, requestAll}) {
     let query = Article.find()
-
+    let author = user && user._id
+    
     let filters = [
-        [isJustVocal, query => query.where('author').equals(user._id)],
-        [isAdmin, query => query.where('state').or([{author: user._id}, {state: {$gte: 1}}])],
-        [notPutEvents, query => query.where('isEvent').equals(false)]
+        [isJustVocal, theAuthor(author)],
+        [isAdmin, eachAuthorArticleState(author)],
+        [notPutEvents, isEvent(false)],
+        [!requestAll, stateAt2()]
     ]
 
     return pipe(query, function() {
@@ -26,6 +29,7 @@ export function filterFor({query, params, user, loginLvl}) {
     state.isJustVocal = state.isAdmin !== undefined && !state.isAdmin
     state.eventsRequested = state.isAdmin && state.requestAll
     state.notPutEvents = !state.eventsRequested
+    console.log('usuario en filterfor', state.user);
 
     return buildQuery(state)
 }

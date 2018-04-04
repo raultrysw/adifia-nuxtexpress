@@ -19,4 +19,4 @@
 
 - [x] No se recarga el avatar al cambiarlo
 - [x] No se quita el botón de validar nada mas validar la foto
-- [ ] Evitar que salgan articulos en borrador
+- [x] Evitar que salgan articulos en borrador
