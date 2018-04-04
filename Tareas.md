@@ -11,9 +11,9 @@
 - [x] Permitir mostrar o solo los usuarios o solo los artículos en el profile
 - [ ] Configurar el header para pantallas de menos de 1024px
 - [x] Preparar un artículo para que sea un evento
-- [ ] Sacar los últimos artículos y las fotos con mas likes en la página principal
+- [x] Sacar los últimos artículos y las fotos con mas likes en la página principal
 - [x] Sacar los administradores de adifia en la página acerca de
-- [ ] Pedir confirmación con un modal al eliminar un artículo
+- [x] Pedir confirmación con un modal al eliminar un artículo
 
 ## Errores conocidos
 

@@ -1,4 +1,5 @@
 import {logFactory} from '../../utils/log'
+import {filterFor} from './query-builder'
 
 export function create(req, res) {
     

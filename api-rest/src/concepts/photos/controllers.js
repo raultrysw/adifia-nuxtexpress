@@ -1,6 +1,7 @@
 import {logFactory} from '../../utils/log'
 import Photo from './model'
 import { pathPhotos } from './storage/photos';
+import {filterFor} from './query-builder'
 
 const mPath = require('path')
 const gm = require('gm').subClass({imageMagick: true})
@@ -27,16 +28,9 @@ export function create(req, res, next) {
 }
 
 export function retrieve(req, res, next) {
-    let user = req.user
-    let filter = {}
-
-    let isAdmin = user && user.pvLvl >= 2
-
-    if(!isAdmin) filter.valid = true
-
-    console.log(filter);
+    let query = filterFor(req)
     
-    Photo.find(filter).exec((err, docs) => {
+    query.exec((err, docs) => {
         res.status(200)
         if (err) {
             res.locals.errors = err
