@@ -56,8 +56,6 @@ export function create(req, res, next) {
  */
 
 export function retrieve(req, res, next) {
-    console.log(req.user);
-    
     let query = filterFor(req)
     query.populate('author', ['name', 'surname', 'email', 'rol'])
     query.sort({'createdAt': -1})

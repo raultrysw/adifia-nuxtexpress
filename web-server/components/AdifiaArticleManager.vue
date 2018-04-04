@@ -6,7 +6,7 @@
         <td>{{creationDate}}</td>
         <td>
             <span>
-                <font-awesome-icon v-if="isMine && !isPublished" @click="removeArticle" icon="times" />
+                <font-awesome-icon v-if="isMine && !isPublished" @click="reqRemoveArticle" icon="times" />
                 <font-awesome-icon v-if="isUnSuccess" @click="sendToModerate" icon="arrow-up" />
                 <font-awesome-icon v-if="isAdmin && isModerating" @click="sendToPublish" icon="arrow-right" />
                 <nuxt-link :to="uriArticleEdition"><font-awesome-icon icon="edit" /></nuxt-link>
@@ -32,7 +32,7 @@ const months = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
 const URI_TO_ARTICLE = '/articles/:id'
 
 export default {
-  props: ['article'],
+  props: ['article', 'indexOfArticle'],
   computed: {
       ...mapGetters('sessions', ['isAdmin']),
       ...mapGetters(['headers']),
@@ -79,10 +79,9 @@ export default {
         },
   },
   methods: {
-        removeArticle() {
-            this.$http.delete(this.uriArticle, {headers:this.headers}).then(response => {
-                this.$emit('change')
-            })
+        reqRemoveArticle() {
+            this.$emit('remove', this.indexOfArticle)
+            
         },
         sendToModerate() {
             this.$http.put(this.uriArticle, {state: 1}, {headers:this.headers}).then(response => {

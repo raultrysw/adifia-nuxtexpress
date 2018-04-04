@@ -29,7 +29,6 @@ export function filterFor({query, params, user, loginLvl}) {
     state.isJustVocal = state.isAdmin !== undefined && !state.isAdmin
     state.eventsRequested = state.isAdmin && state.requestAll
     state.notPutEvents = !state.eventsRequested
-    console.log('usuario en filterfor', state.user);
-
+    
     return buildQuery(state)
 }
