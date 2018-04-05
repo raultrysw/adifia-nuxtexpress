@@ -1,6 +1,6 @@
 <template>
   <header>
-      <rsw-toggle-input v-if="mqIs('lower', 'l')" text="mostrar aside">
+      <rsw-toggle-input v-if="mqIs('-l')" text="mostrar aside">
         <font-awesome-icon icon="bars" />
       </rsw-toggle-input>
       <h1>Adifia</h1>
