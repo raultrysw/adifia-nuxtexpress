@@ -8,10 +8,10 @@
         <div v-if="isEvent">
             <h2>Información del evento</h2>
             <div class="main-start">
-                <div style="width: 70%">
+                <div>
                     <rsw-location-picker :lat="lat" :lng="lng" :text="text" v-model="location" title="Lugar del evento" />
                 </div>
-                <div style="width: 30%">
+                <div>
                     <rsw-field-group-input title="Datos básicos del evento" vertical="true">
                         <rsw-field-input text="Dia">
                             <input v-model="date" type="date" />

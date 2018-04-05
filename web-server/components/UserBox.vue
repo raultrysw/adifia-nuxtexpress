@@ -19,13 +19,3 @@ export default {
   }
 }
 </script>
-<style lang="scss">
-.userbox {
-  border: 1px solid;
-  margin: .25em;
-  padding: .25em;
-  &__logout-button > a {
-    color: black;
-  }
-}
-</style>

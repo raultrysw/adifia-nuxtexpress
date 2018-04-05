@@ -4,11 +4,11 @@
       <img ref="imgPhoto" src="" alt="">
         <rsw-form :submitHandler="sendForm" submitText="Enviar foto"  :errors="errors">
             <div class="main-start">
-                <div style="width: 30%">
+                <div >
                     <h3>Haz click aquí para subir la foto</h3>
                     <rsw-live-preview-image width="100%" height="15em" v-model="file" :defaultImg="photo" :atChange="updateImage" />
                 </div>
-                <div style="width: 70%;padding-left: .4em;">
+                <div>
                     <rsw-field-group-input title="información de contacto">
                         <rsw-field-input ref="emailField" description="Email de contacto" v-model="email" />
                     </rsw-field-group-input>
@@ -16,7 +16,7 @@
                         <rsw-field-input text="Titulo" description="Título de la foto" v-model="title" />
                         <label class="rsw-field">
                             <span>Descripción de la foto</span>
-                            <textarea placeholder="Descripción de la barrera" v-model="description"  style="width: 100%;height: 6em; resize: none;"></textarea>
+                            <textarea placeholder="Descripción de la barrera" v-model="description" ></textarea>
                         </label>
                     </rsw-field-group-input>
                 </div>
@@ -101,6 +101,3 @@ export default {
   }
 }
 </script>
-<style>
-
-</style>

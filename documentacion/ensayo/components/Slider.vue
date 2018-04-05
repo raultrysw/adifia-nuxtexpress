@@ -24,7 +24,6 @@
     </section>
   </div>
 </template>
-
 <script>
 export default {
   data () {
@@ -54,29 +53,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss">
-.slider {
-  width: 100%;
-  height: 26vh;
-  margin: 0 auto;
-  &__slide {
-    padding: 1em;
-    height: 100%;
-    width: 100%;
-    background-color: bisque;
-    position: absolute;
-    opacity: 0;
-    overflow: auto;
-    transition: opacity .50s;
-    &.active {
-      opacity: 1;
-      transition: opacity .25s .50s;
-    }
-  }
-  &.activated {
-    box-shadow: 0.3px 0.3px 0.3px 0.5px grey;
-  }
-}
-
-</style>

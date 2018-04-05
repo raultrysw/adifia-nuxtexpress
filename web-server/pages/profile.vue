@@ -83,20 +83,3 @@ export default {
     }
 }
 </script>
-<style lang="scss">
-#avatarUploader {
-    display: none;
-}
-.articles-table {
-    border-collapse: collapse;
-    &__header {
-        background: darkgrey;
-        font-weight: bold;
-        color: white;
-        font-size: 1.3em;
-    }
-}
-.user__avatar {
-    width: 25%;
-}
-</style>

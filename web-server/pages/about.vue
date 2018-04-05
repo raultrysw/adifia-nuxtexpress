@@ -60,12 +60,3 @@ export default {
     }
 }
 </script>
-<style>
-.about-page {
-    max-width: 60vw;
-    margin: 0 auto;
-}
-.about-page ul {
-    margin-left: 2em;
-}
-</style>

@@ -11,9 +11,9 @@
     <section>
       <h3>Últimas fotos</h3>
       <div class="main-start">
-        <div style="max-width: 33.3%; padding: 0em 1em;" v-for="(photo, index) in photos" :key="index">
+        <div v-for="(photo, index) in photos" :key="index">
           <h4>{{photo.title}}</h4>
-          <img style="max-width: 100%" :src="'http://localhost:7000/assets/img/photos/' + photo._id + '.jpg'" alt="">
+          <img :src="'http://localhost:7000/assets/img/photos/' + photo._id + '.jpg'" alt="">
           <p>{{photo.description}}</p>
         </div>
       </div>
@@ -50,5 +50,3 @@ export default {
   }
 }
 </script>
-
-<style></style>

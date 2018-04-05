@@ -25,8 +25,3 @@ export default {
     }
 }
 </script>
-<style lang="css">
-.article {
-    margin: 10px;
-}
-</style>
