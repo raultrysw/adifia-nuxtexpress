@@ -13,11 +13,3 @@
     </defs>
   </svg>
 </template>
-
-<style lang="css">
-#logo {
-  display: block;
-  margin: 0 auto;
-  transform: scale(1.3)
-}
-</style>

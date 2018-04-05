@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/raultrysw/adifia#readme",
   "dependencies": {
-    "jwt-simple": "^0.5.1"
+    "jwt-simple": "^0.5.1",
+    "vue-mq": "^0.1.3"
   }
 }

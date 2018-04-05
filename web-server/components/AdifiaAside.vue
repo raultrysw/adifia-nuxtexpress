@@ -1,11 +1,10 @@
 <template>
   <aside class="app__aside">
-      <adifia-logo />
-      <h1 class="app__title" ><nuxt-link to="/">Adifia</nuxt-link></h1>
-      <ul class="app__navigator-bar no-list nav nav--horizontal">
-        <li class="nav__item"><nuxt-link to="/articles">Blog</nuxt-link></li>
-        <li class="nav__item"><nuxt-link to="/photos">Foto denuncia</nuxt-link></li>
-      </ul>
+      <div class="app__title-box">
+        <adifia-logo />
+        <h1 class="app__title" @click="$emit('close')" ><nuxt-link to="/">Adifia</nuxt-link></h1>
+      </div>
+      <adifia-navigator @closeAside="$emit('close')" />
       <adifia-login-box v-if="!logged" />
       <user-box v-else />
     </aside>
@@ -15,9 +14,10 @@ import {mapState} from 'vuex'
 import AdifiaLoginBox from '~/components/AdifiaLoginBox.vue'
 import UserBox from '~/components/UserBox.vue'
 import AdifiaLogo from '~/components/AdifiaLogo.vue'
+import AdifiaNavigator from '~/components/AdifiaNavigator.vue'
 
 export default {
-    components: {AdifiaLoginBox, UserBox, AdifiaLogo},
+    components: {AdifiaLoginBox, UserBox, AdifiaLogo, AdifiaNavigator},
   computed: {
     ...mapState('sessions', ['logged'])      
   }

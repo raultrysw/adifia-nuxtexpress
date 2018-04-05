@@ -24,27 +24,3 @@ $color-secondary-2-1: #F1F1F0;
 $color-secondary-2-2: #C7C7C7;
 $color-secondary-2-3: #757575;
 $color-secondary-2-4: #454544;
-
-body {
-    color: $color-secondary-1-2;
-    background: lighten($color-primary-0, 30%);
-}
-
-h1, h2 {
-    color: $color-primary-3;
-}
-
-h3, h4 {
-    color: $color-primary-0;
-    a {
-        color: inherit;
-    }
-}
-
-a {
-    color: $color-primary-4;
-    transition: all .2s;
-    &:hover {
-        color: adjust-hue($color-primary-4, 40%);
-    }
-}

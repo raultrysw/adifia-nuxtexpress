@@ -1,9 +1,9 @@
 <template>
   <div class="app" v-if="loaded">
-    <adifia-header v-if="smallDevice" />
-    <adifia-aside v-else />
-    <main class="app__main">
-      <header class="main-justify cross-center app__header" >
+    <adifia-header class="app__header" v-model="showingAside"/>
+    <adifia-aside @close="() => showingAside = false" v-if="showingAside"/>
+    <main v-if="!showingAside" class="app__main">
+      <header class="app__toolbar" >
         <h1 class="app__title-page" >{{currentTitle}}</h1>
         <div v-if="currentBar && isAdmin" :is="currentBar"></div>
       </header>
@@ -24,7 +24,8 @@ export default {
   components: {AdifiaAside, AdifiaHeader, AdifiaPhotoToolbar},
   data() {
     return {
-      smallDevice: false
+      smallDevice: false,
+      showingAside: false
     }
   },
   mounted() {

@@ -8,12 +8,19 @@ import photos from './photos'
 const {encode, decode} = require('../../utils/user-token')
 
 const createStore = () => {
-  return new Vuex.Store({
+  let store = new Vuex.Store({
       modules: {sessions, users, articles, photos},
       state: {
           currentTitle: 'Sin título',
           loaded: false,
-          currentBar: ''
+          currentBar: '',
+          widthW: 0,
+          widths: {
+              s: 320,
+              m: 640,
+              l: 1024,
+              xl: 1440
+          }
       },
       mutations: {
         context(state, {title, bar}) {
@@ -22,6 +29,10 @@ const createStore = () => {
             state.currentBar = bar === '' ? bar : 'adifia-' + bar + '-toolbar'
             console.log('current toolbar', state.currentBar);
             
+        },
+        updateBounds(state) {
+            const innerWidth = window.innerWidth
+            state.widthW = innerWidth
         }
       },
       getters: {
@@ -53,6 +64,15 @@ const createStore = () => {
           }
       }
   })
+
+  if (process.browser) {
+      window.onload = () => store.commit('updateBounds')
+      window.onresize = () => {
+          store.commit('updateBounds')
+      }
+  }
+
+  return store;
 }
 
 export default createStore

@@ -1,6 +1,5 @@
 <template>
   <section class="container">
-    <h2>Bienvenido a Adifia</h2>
     <adifia-slider />
     <section>
       <h3>Últimos artículos</h3>

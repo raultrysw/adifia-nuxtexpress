@@ -1,0 +1,10 @@
+@mixin myEdContainer {
+    @include edContainer;
+    margin: none;
+    max-width: initial;
+}
+@mixin myEdItem {
+    @include edContainer;
+    margin: none;
+    max-width: initial;
+}
