@@ -4,7 +4,7 @@
         <adifia-logo />
         <h1 class="app__title" @click="$emit('close')" ><nuxt-link to="/">Adifia</nuxt-link></h1>
       </div>
-      <adifia-navigator @closeAside="$emit('close')" />
+      <adifia-navigator v-if="mqIs('+l')" @closeAside="$emit('close')" />
       <adifia-login-box v-if="!logged" />
       <user-box v-else />
     </aside>

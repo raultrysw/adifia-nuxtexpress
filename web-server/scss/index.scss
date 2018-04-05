@@ -20,9 +20,14 @@
         margin-top: $height-header;
         z-index: -40;
         position: absolute;
+        @include from(l) {
+            width: initial;
+            margin-left: $aside-width;
+        }
         &-content {
             @include myEdItem;
             @include myEdContainer;
+            margin: .5em 1em;
         }
     }
     &__navigator-bar {
@@ -35,8 +40,12 @@
         position: fixed;
         height: $height-header;
         top: 0px;
+        @include from(xl) {
+            left: $aside-width;
+        }
         @if $debugging {
             border-bottom: 1px solid;
+            background: white;
         }
         & > .app__navigator-bar {
             width: initial;
@@ -51,18 +60,35 @@
         @include myEdContainer;
         @if $debugging {
             border-right: 1px solid;
+            background: white;
+        }
+        @include mainStart;
+        @include flexColumn;
+        position: fixed;
+        bottom: 0px;
+        top: 0px;
+        left: 0px;
+        @include to(xl) {
+            margin-top: $height-header;
+        }
+        @include from(l) {
+            width: $aside-width;
         }
         @include fromTo(s, l) {
-            @include mainStart;
-            @include flexColumn;
-            position: absolute;
-            top: 0px;
-            left: 0px;
-            bottom: 0px;
             right: 0px;
             width: 100%;
-            margin-top: $height-header;
             z-index: -10;
+        }
+        & > .app__navigator-bar {
+            border-width: 1px 0px;
+            border-style: solid;
+            margin-bottom: 1em;
+        }
+        & + .app__main {
+            @include to(l) {
+                height: 0vh;
+                overflow: hidden;
+            }
         }
     }
     &__toolbar {

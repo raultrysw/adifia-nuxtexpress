@@ -1,12 +1,8 @@
 <template>
   <div class="app" v-if="loaded">
     <adifia-header class="app__header" v-model="showingAside"/>
-    <adifia-aside @close="() => showingAside = false" v-if="showingAside"/>
-    <main v-if="!showingAside" class="app__main">
-      <header class="app__toolbar" >
-        <h1 class="app__title-page" >{{currentTitle}}</h1>
-        <div v-if="currentBar && isAdmin" :is="currentBar"></div>
-      </header>
+    <adifia-aside @close="() => showingAside = false" v-if="showAside"/>
+    <main class="app__main">
       <section class="app__main-content" is="nuxt"></section>
     </main> 
   </div>
@@ -47,7 +43,10 @@ export default {
   },
   computed: {
     ...mapState(['currentTitle', 'loaded', 'currentBar']),
-    ...mapGetters('sessions', ['isAdmin'])
+    ...mapGetters('sessions', ['isAdmin']),
+    showAside() {
+      return this.mqIs('+l') || this.showingAside
+    }
   }
 }
 </script>
