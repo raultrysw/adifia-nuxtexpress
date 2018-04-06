@@ -3,7 +3,7 @@
 @import './variables.scss';
 @import './colors.scss';
 @import './mixins.scss';
-@import './adifia-components.scss';
+@import './components/index.scss';
 @import './general-styles.scss';
 
 #logo {
@@ -23,6 +23,7 @@
         &-content {
             @include myEdItem;
             @include myEdContainer;
+            @include flexColumn;
             margin: .5em 1em;
         }
     }
