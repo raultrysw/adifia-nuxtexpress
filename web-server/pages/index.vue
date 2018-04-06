@@ -1,22 +1,24 @@
 <template>
-  <section class="container">
+  <section class="root-page">
     <adifia-slider />
-    <section>
-      <h3>Últimos artículos</h3>
-      <div v-for="(article, index) in articles" :key="index">
-        <h4><nuxt-link :to="'/articles/' + article._id">{{article.title}}</nuxt-link></h4>
+    <section class="root-page__section root-page__section--articles">
+      <h3 class="root-page__section__title">Últimos artículos</h3>
+      <div class="root-page__section root-page__section--content">
+        <div class="article" v-for="(article, index) in articles" :key="index">
+          <h4><nuxt-link :to="'/articles/' + article._id">{{article.title}}</nuxt-link></h4>
+        </div>
       </div>
     </section>
-    <section>
+    <section class="root-page__section root-page__section--photos">
       <h3>Últimas fotos</h3>
-      <div class="main-start">
-        <div v-for="(photo, index) in photos" :key="index">
+      <div class="root-page__section root-page__section--content gallery">
+        <div class="photo" v-for="(photo, index) in photos" :key="index">
           <h4>{{photo.title}}</h4>
           <img :src="'http://localhost:7000/assets/img/photos/' + photo._id + '.jpg'" alt="">
           <p>{{photo.description}}</p>
         </div>
       </div>
-      <p><nuxt-link to="/photos">Ver mas fotos </nuxt-link></p>
+        <p><nuxt-link to="/photos">Ver mas fotos </nuxt-link></p>
     </section>
   </section>
 </template>
