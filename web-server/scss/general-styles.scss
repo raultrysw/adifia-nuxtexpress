@@ -15,3 +15,35 @@ body {
 h1, h2, h3, h4, h5, h6 {
     font-family: 'Slabo 27px';
 }
+
+.table-view {
+    display: table;
+    border-spacing: .2em;
+}
+.table-view > * {display: table-row;}
+.table-view > * > * {display: table-cell;}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 1.025em;
+}
+thead {
+    font-size: 1.025em;
+    background-color: black;
+    font-weight: 700;
+    color: white;
+}
+tr {
+    background-color: lightgrey;
+    &:nth-child(even) {
+        color: white;
+        background-color: grey;
+    }
+}
+th, td {
+    border-left: 1px solid;
+    &:first-child {
+        border: none;
+    }
+}

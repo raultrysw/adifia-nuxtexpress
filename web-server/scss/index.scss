@@ -14,12 +14,13 @@
 .app {
     &__main {
         @include myEdContainer;
-        margin-top: $height-header;
+        top: $height-header;
         z-index: -40;
         position: absolute;
         @include from(l) {
             width: initial;
-            margin-left: $aside-width;
+            left: $aside-width;
+            right: 0px;
         }
         &-content {
             @include myEdItem;

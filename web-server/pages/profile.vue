@@ -1,34 +1,30 @@
 <template>
-    <section v-if="showui">
-        <div class="main-start">
+    <section class="profile-page" v-if="showui">
+        <div class="profile-page__section--info">
             <rsw-live-preview-image :defaultImg="avatarUrl" width="15vw" height="10em" :atChange="pushImage" />
-            <div>
-                <div><span>Nombre</span>: {{this.user.name}}</div>
-                <div><span>Apellidos</span>: {{this.user.surname}}</div>
-                <div><span>Correo electrónico</span>: {{this.user.email}}</div>
+            <div class="table-view">
+                <div><span>Nombre</span>{{this.user.name}}</div>
+                <div><span>Apellidos</span>{{this.user.surname}}</div>
+                <div><span>Correo electrónico</span>{{this.user.email}}</div>
             </div>
         </div>
-        <div v-if="isVocal">
-            <div>
-                <span>Ver</span>
+        <div class="profile-page__section--management" v-if="isVocal">
+            <div class="profile-page__section--management__switcher">
                 <select v-if="isAdmin" v-model="optionChoosen">
                     <option value="1">Articulos</option>
                     <option value="2">Usuarios</option>
                 </select>
             </div>
-            <div v-if="optionChoosen === '1'">
-                <h2>Artículos</h2>
+            <div class="profile-page__section--management__articles" v-if="optionChoosen === '1'">
                 <adifia-articles-management v-if="isVocal" />
             </div>
-            <div v-if="optionChoosen === '2'">
-                <h2>Usuarios</h2>
+            <div class="profile-page__section--management__users" v-if="optionChoosen === '2'">
                 <adifia-memebers-management v-if="isAdmin" />
             </div>
         </div>
-        
-        <section v-else>
+        <div class="profile-page__section--private-actions" v-else>
             <h3>Eeres socio</h3>
-        </section>
+        </div>
     </section>
 </template>
 <script>

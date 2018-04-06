@@ -1,5 +1,5 @@
 <template>
-    <tr :style="style">
+    <tr>
         <td>{{article.title}}</td>
         <td>{{article.author.name}} {{article.author.surname}}</td>
         <td>{{estado}}</td>
