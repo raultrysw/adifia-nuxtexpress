@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="adifia-slider" ref="slider">
-    <article class="adifia-slider__slide slide">
+    <article :class="classes">
       <div>
         <h1 class="slide__title" @click="cPoint=0">¿Qiuenes somos?</h1>
         <div class="slide__content" v-if="cPoint===0">
@@ -8,7 +8,7 @@
         </div>
       </div>
     </article>
-    <article class="adifia-slider__slide slide">
+    <article :class="classes">
       <div>
         <h1 class="slide__title" @click="cPoint=1">¿Por que se creó?</h1>
         <div class="slide__content" v-if="cPoint===1">
@@ -16,7 +16,7 @@
         </div>
       </div>
     </article>
-    <article class="adifia-slider__slide slide">
+    <article :class="classes">
       <div>
         <h1 class="slide__title" @click="cPoint=2">¿Quienes pueden ser socios?</h1>
         <div class="slide__content" v-if="cPoint===2">
@@ -30,7 +30,7 @@
         </div>
       </div>
     </article>
-    <article class="adifia-slider__slide slide">
+    <article :class="classes">
       <div>
         <h1 class="slide__title" @click="cPoint=3">Finalidad</h1>
         <div class="slide__content" v-if="cPoint===3">
@@ -47,6 +47,14 @@ export default {
     return {
       slideActive: 0,
       cPoint: 0
+    }
+  },
+  computed: {
+    classes() {
+      return {
+        'adifia-slider__slide': true,
+        'slide': true
+      }
     }
   },
   mounted () {

@@ -1,6 +1,10 @@
 // ESTILOS DE ADIFIA
 .adifia {
     &-slider {
+        display: block;
+        @include from(xl) {
+            width: 60%;
+        }
         border: 1px solid;
         &__slide:not(:last-child) {
             border-bottom: 1px solid;

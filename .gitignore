@@ -2,3 +2,4 @@ node_modules
 api-rest/node_modules
 web-server/node_modules
 api-rest/assets/img/*
+vscode project.code-workspace
