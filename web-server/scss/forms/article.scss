@@ -1,0 +1,17 @@
+.form-article {
+    &-event {
+        &__location {
+            width: 60%;
+        }
+        &__date-time {
+            width: 40%;
+        }
+        &__story {
+            &-frame {
+                display: block;
+                width: 100%;
+                height: 6em;
+            }
+        }
+    }
+}

@@ -1,30 +1,30 @@
 <template>
-    <rsw-form v-if="show" :submitHandler="submitArticle" submitText="Enviar artículo" :errors="errors">
-        <rsw-field-group-input title="Título del artículo">
+    <rsw-form class="form-article" v-if="show" :submitHandler="submitArticle" submitText="Enviar artículo" :errors="errors">
+        <rsw-field-group-input class="form-article__title" title="Título del artículo">
             <rsw-field-input :value="title" v-model="title" description="Pon el título del artículo" />
         </rsw-field-group-input>
-        <editor :init="initmce" v-model="body" />
+        <editor class="form-article__body" :init="initmce" v-model="body" />
         <rsw-toggle-input :state="isEvent" v-model="isEvent">Es un evento</rsw-toggle-input>
-        <div v-if="isEvent">
+        <div v-if="isEvent" class="form-article-event form-article-event__zone">
             <h2>Información del evento</h2>
             <div class="main-start">
-                <div>
-                    <rsw-location-picker :lat="lat" :lng="lng" :text="text" v-model="location" title="Lugar del evento" />
+                <div class="form-article-event__location">
+                    <rsw-location-picker height="10em" :lat="lat" :lng="lng" :text="text" v-model="location" title="Lugar del evento" />
                 </div>
-                <div>
+                <div class="form-article-event__date-time">
                     <rsw-field-group-input title="Datos básicos del evento" vertical="true">
-                        <rsw-field-input text="Dia">
+                        <rsw-field-input class="form-article-event__date" text="Dia">
                             <input v-model="date" type="date" />
                         </rsw-field-input>
-                        <rsw-field-input text="Hora">
+                        <rsw-field-input class="form-article-event__time" text="Hora">
                             <input  v-model="time" type="time" />
-                        </rsw-field-input>
-                        <rsw-field-input text="story">
-                            <textarea v-model="story"></textarea>
                         </rsw-field-input>
                     </rsw-field-group-input>
                 </div>
             </div>
+            <rsw-field-input class="form-article-event__story" text="story">
+                <textarea class="form-article-event__story-frame" v-model="story"></textarea>
+            </rsw-field-input>
         </div>
     </rsw-form>
 </template>
@@ -87,8 +87,8 @@ export default {
             date: '',
             story: '',
             location: '',
-            lat: '',
-            lng: '',
+            lat: 38.3459963,
+            lng: -0.4906855,
             text: ''
         }
     },

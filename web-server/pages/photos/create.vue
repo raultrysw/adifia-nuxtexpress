@@ -1,30 +1,26 @@
 <template>
-  <section>
-      <h2>Subiendo una foto</h2>
-      <img ref="imgPhoto" src="" alt="">
-        <rsw-form :submitHandler="sendForm" submitText="Enviar foto"  :errors="errors">
-            <div class="main-start">
-                <div >
-                    <h3>Haz click aquí para subir la foto</h3>
-                    <rsw-live-preview-image width="100%" height="15em" v-model="file" :defaultImg="photo" :atChange="updateImage" />
-                </div>
-                <div>
-                    <rsw-field-group-input title="información de contacto">
-                        <rsw-field-input ref="emailField" description="Email de contacto" v-model="email" />
-                    </rsw-field-group-input>
-                    <rsw-field-group-input title="Información basica de la foto" vertical="true">
-                        <rsw-field-input text="Titulo" description="Título de la foto" v-model="title" />
-                        <label class="rsw-field">
-                            <span>Descripción de la foto</span>
-                            <textarea placeholder="Descripción de la barrera" v-model="description" ></textarea>
-                        </label>
-                    </rsw-field-group-input>
-                </div>
+    <rsw-form class="form-photo" :submitHandler="sendForm" submitText="Enviar foto"  :errors="errors">
+        <div class="main-start form-photo__basic-data">
+            <div class="form-photo__file">
+                <h2>Haz click aquí para subir la foto</h2>
+                <rsw-live-preview-image width="100%" height="15em" v-model="file" :defaultImg="photo" :atChange="updateImage" />
             </div>
-            <rsw-location-picker :lat="38.3459963" :lng="-0.4906855" v-model="location" hint="Busca aquí el lugar de la barrera" />
-            <p v-if="location"><a :href="linkToMaps" target="_blank">Ver en google maps</a></p>
-        </rsw-form>
-  </section>
+            <div class="form-photo__data">
+                <rsw-field-group-input title="información de contacto">
+                    <rsw-field-input ref="emailField" description="Email de contacto" v-model="email" />
+                </rsw-field-group-input>
+                <rsw-field-group-input title="Información basica de la foto" vertical="true">
+                    <rsw-field-input text="Titulo" description="Título de la foto" v-model="title" />
+                    <label class="rsw-field">
+                        <span>Descripción de la foto</span>
+                        <textarea class="form-photo__description" placeholder="Descripción de la barrera" v-model="description" ></textarea>
+                    </label>
+                </rsw-field-group-input>
+            </div>
+        </div>
+        <rsw-location-picker class="form-photo__location" height="18em" :lat="38.3459963" :lng="-0.4906855" v-model="location" hint="Busca aquí el lugar de la barrera" />
+        <p v-if="location"><a :href="linkToMaps" target="_blank">Ver en google maps</a></p>
+    </rsw-form>
 </template>
 <script>
 import axios from 'axios'
