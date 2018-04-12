@@ -8,14 +8,7 @@ export function uploadImage(req, res, next) {
     let index = pathImage.indexOf(path.sep + 'img')
     let serverPath = 'http://localhost:7000/assets' + pathImage.substr(index, pathImage.length)
     
-    res.locals = {
-        url: serverPath,
-        status: 'ok'
-    }
-
-    console.log(res.locals);
-    console.log(pathImage);
-    
+    res.locals = req.createGoodResponse(201, 'Las imagenes fueron subidas correctemnte', {path: serverPath})
 
     next();
 }

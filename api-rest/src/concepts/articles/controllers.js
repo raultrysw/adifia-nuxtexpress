@@ -10,15 +10,12 @@ const log = logFactory('ARTICLES CONTROLLER')
 
 export function get(req, res, next) {
     Article.findById(req.params.id).populate('author', 'name surname').exec((err, article) => {
-        res.status(200)
         if (err) {
-            res.locals.errors = err
-            next()
-        } else {
-            res.locals = {
-                status: 'ok',
-                article
-            }
+            let response = req.createBadResponse(500, 'Hubo un error interno')
+            next(response)
+        }
+        else {
+            res.locals = req.createGoodResponse(200, 'Artículo recuperado', {article})
             next()
         }
     })
@@ -35,14 +32,13 @@ export function create(req, res, next) {
         article.save((err, doc) => {
             res.status(200)
             if (err) {
-                log('debug', `Hay ${Object.keys(err.errors).length} error en el documento de member`)
+                let message = `Hay ${Object.keys(err.errors).length} error en el documento de member`
+                log('debug', message)
                 res.locals.errors = getMongoDocumentErrors(err);
-                next()
+                let response = req.createBadResponse(209, message, {})
+                next(response)
             } else {
-                res.locals = {
-                    status: 'ok',
-                    doc: article._id
-                }
+                res.locals = createGoodResponse(201, 'El artículo fue creado correctamente', {articleId: article._id})
                 Member.pushArticle(article, userWriting)
                 next()
             }
@@ -59,17 +55,14 @@ export function retrieve(req, res, next) {
     let query = filterFor(req)
     query.populate('author', ['name', 'surname', 'email', 'rol'])
     query.sort({'createdAt': -1})
-            .exec((err, articles) => {
+    query.exec((err, articles) => {
         res.status(200)
         if (err) {
-            console.log(err);
-            
+            let response = req.createBadResponse(500, 'Ha habido un error interno', {})
             res.locals.errors = err
-            return next()
+            return next(response)
         }
-        res.locals = {
-            status: 'ok', articles
-        }
+        res.locals = req.createGoodResponse(200, 'Todos los artículos fueron recuperados', {articles})
         next();
     })
 }
@@ -82,20 +75,16 @@ export function update(req, res, next) {
     let notIsAuthorized = !noHeaders && user.pvLvl < 2;
 
     if (noHeaders && notIsAuthorized) {
-        res.status(403)
-        res.locals = {status: 'bad'}
-        return next()
+        let response = req.createBadResponse(403, 'Se necesita autorización paaraa realizar esta acción')
+        return next(response)
     }
 
-    Article.findByIdAndUpdate(req.params.id, {$set}, (err, doc) => {
-        res.status(200)
+    Article.findByIdAndUpdate(req.params.id, {$set}, (err, article) => {
         if (err) {
-            res.locals.errors = err
-            return next()
+            let response = req.createBadResponse(500, 'Hubo un error interno')
+            return next(response)
         }
-        res.locals = {
-            status: 'ok', doc
-        }
+        res.locals = req.createGoodResponse(210, 'El artículo fue actualizado correctamente', {article})
         next()
     })
 }
@@ -106,20 +95,17 @@ export function destroy(req, res, next) {
     let user = req.user
     let notIsAuthorized = !user && req.heders.pvLvl < 2;
     if (user && notIsAuthorized) {
-        res.status(403)
-        res.locals = {status: 'bad'}
-        return next()
+        let response = req.createBadResponse(403, 'Se necesita autorización paaraa realizar esta acción')
+        return next(response)
     }
     Article.findByIdAndRemove(req.params.id, (err, doc) => {
         res.status(200)
         if (err) {
-            res.locals.errors = err
-            return next()
+            let response = req.createBadResponse(500, 'Hubo un error interno')
+            return next(response)
         }
         Member.removeArticle(doc.author, doc._id)
-        res.locals = {
-            status: 'ok', doc
-        }
+        res.locals = req.createGoodResponse(211, 'El artículo fue eliminado correctamente')
         next()
     })
 }

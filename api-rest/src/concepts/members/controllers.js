@@ -10,27 +10,22 @@ export function create(req, res, next) {
     const {name, surname, email, password} = req.body
     log('debug', 'Creando el usuario: ' + email)
     const member = new Member({name, surname, email, password})
-    member.save(member, (err, doc) => {
+    member.save(member, (err, member) => {
         res.status(200)
         if (err) {
             let isDuplicated = err.code === DUPLICATE_ERROR_CODE
+            let response = null
 
-            if (isDuplicated) {
-                res.locals = {
-                    status: 'bad',
-                    message: 'Ya hay un usuario con el mismo correo'
-                }
-            } else {
-                log('debug', `Hay ${Object.keys(err.errors).length} error en el documento de member`)
+            if (isDuplicated) 
+                response = createBadResponse(209, 'Ya hay un usuario con el mismo correo')
+            else {
                 res.locals.errors = getMongoDocumentErrors(err);
+                response = createBadResponse(209, 'Hay varios errores en el documento', {errors: getMongoDocumentErrors(err)})
             }
 
             next()
         } else {
-            res.locals = {
-                status: 'ok',
-                doc: {name, surname, email}
-            }
+            res.locals = req.createGoodResponse(201, 'Te has registrado correctamente', {member})
             next()
         }
     })
@@ -46,16 +41,15 @@ export function retrieve(req, res, next) {
     query.exec((err, docs) => {
         res.status(200)
         if (err) {
+            let response = req.createBadResponse(500, 'Hubo un error interno')
             res.locals.errors = err
-            return next()
+            return next(response)
         }
         let users = docs.map(doc => {
             let {name, surname, email, pvLvl, _id} = doc
             return {name, surname, email, pvLvl, _id}
         })
-        res.locals = {
-            status: 'ok', users
-        }
+        res.locals = req.createGoodResponse(200, 'Los artículos fueron recuperados correctamente')
         next();
     })
 }
@@ -63,30 +57,28 @@ export function retrieve(req, res, next) {
 export function update(req, res, next) {
     let {id} = req.params
     let $set = req.body
-    Member.findByIdAndUpdate(id, {$set}, (err, doc) => {
+    Member.findByIdAndUpdate(id, {$set}, (err, user) => {
         res.status(200)
         if (err) {
+            let response = req.createBadResponse(500, 'Hubo un error interno')
             res.locals.errors = err
-            return next()
+            return next(response)
         }
-        res.locals = {
-            status: 'ok', doc
-        }
+        res.locals = req.createGoodResponse(210, 'El usuario fue actualizado correctamente')
         next()
     })
 }
 
 export function destroy(req, res, next) {
     let {id} = req.params
-    Member.findByIdAndRemove(id, (err, doc) => {
+    Member.findByIdAndRemove(id, (err, user) => {
         res.status(200)
         if (err) {
+            let response = req.createBadResponse(500, 'Hubo un error interno')
             res.locals.errors = err
-            return next()
+            return next(response)
         }
-        res.locals = {
-            status: 'ok', doc
-        }
+        res.locals = req.createGoodResponse(211, 'El usuario fue eliminado correctamente', {user})
         next()
     })    
 }

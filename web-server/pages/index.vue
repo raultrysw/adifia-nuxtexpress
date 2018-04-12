@@ -42,9 +42,8 @@ export default {
 
     Promise.all([articlesReq, photosReq]).then(responses => {
       let [articles, photos] = responses.map(r => r.data)
-
-      this.articles = articles.articles
-      this.photos = photos.docs
+      this.articles = articles.data.articles
+      this.photos = photos.data.photos
 
       this.$store.commit('context',{title:'Página pincipal', bar: ''})
     })

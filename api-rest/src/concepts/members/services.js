@@ -18,16 +18,14 @@ export function normalizeAvatarImage(req, res, next) {
 
     let finalPath = pathM.join(destination, newFileName)
     log('debug', 'Escribiendo imagen en: ' + finalPath)
-    gm(path).resize(400, 600).write(finalPath, (err) => {
+    gm(path).resize(400, 600).write(filename, (err) => {
         if (err) {
-            log('debug', 'HUBO UN ERROR')
-            console.log(err)
+            let response = req.createBadResponse(500, 'Hubo un error interno')
+            res.locals.errors = err
+            return next(response)
         }
         fs.unlink(path, (err) => {
-            res.locals = {
-                status: 'ok',
-                filename: finalPath
-            }
+            res.locals = req.createGoodResponse(201, 'Avatar creado correctamente', {filename})
             next()
         })
     })
@@ -45,21 +43,19 @@ export function logIn(req, res, next) {
     res.status(200)
     const {email, password} = req.body
     log("debug", `Buscando un usuario con ${email}`)
-    Member.compareUserAndPass({email, password}, (err, doc, result) => {
+    Member.compareUserAndPass({email, password}, (err, user, result) => {
         if (doc === null && !err) {
             log('debug', 'No se enconro el usuario')
             if (doc === null || !result) {
-                res.locals = {
-                    status: 'bad',
-                    message: 'Usuario no encontrado'
-                }
-                return next()
+                let response = req.createBadResponse(404, 'Usuario no encontrado')
+                res.locals.errors = err
+                return next(response)
             }
         } else {
             if (err) {
-                log('debug', 'Han habido errores')
+                let response = req.createBadResponse(500, 'Hubo un error interno')
                 res.locals.errors = err
-                return next()
+                return next(response)
             }
         }
 
@@ -71,11 +67,7 @@ export function logIn(req, res, next) {
         console.log(doc);
         
         
-        res.locals = {
-            status: result ? 'ok': 'bad',
-            userFound: (result && userFound) || false
-        }
-        if (!result) res.locals.message = 'Usuario no encontrado'
+        res.locals = req.createGoodResponse(201, 'Sesión creada correctamente', {user})
         return next()
     })
 }

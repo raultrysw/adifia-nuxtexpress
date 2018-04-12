@@ -14,12 +14,8 @@ export function create(req, res, next) {
     let finalPath = mPath.join(destination, photo._id + '.jpg')
     gm(path).resize(500, 800).write(finalPath, (err) => {
         fs.unlink(path, err => {
-            photo.save((err, doc) => {
-                res.locals = {
-                    status: 'ok',
-                    doc
-                }
-                console.log('Todo ha sido hecho con éxito');
+            photo.save((err, photo) => {
+                res.locals = req.createGoodResponse(201, 'La foto ha sido creada correctamente', {photo})
                 
                 next()
             })
@@ -30,15 +26,14 @@ export function create(req, res, next) {
 export function retrieve(req, res, next) {
     let query = filterFor(req)
     
-    query.exec((err, docs) => {
+    query.exec((err, photos) => {
         res.status(200)
         if (err) {
+            let response = req.createBadResponse(500, 'Ha habido un error interno', {})
             res.locals.errors = err
-            return next()
+            return next(response)
         }
-        res.locals = {
-            status: 'ok', docs
-        }
+        res.locals = req.createGoodResponse(200, 'Las fotos se recuperaron correctamente', {photos})
         next();
     })
 }
@@ -52,18 +47,12 @@ export function update(req, res, next) {
     let theUserIsNotAdmin = user.pvLvl < 2
     
     if (theUserIsNotAdmin) {
-        res.status(404)
-        res.locals = {
-            status: 'bad'
-        }
-        return next()
+        let response = req.createBadResponse(401, 'Usted no esta autorizado para realizar esta acción')
+        return next(response)
     }
 
     Photo.findByIdAndUpdate(req.params.id, {$set}, (err, doc) => {
-        res.locals = {
-            status: 'ok',
-            doc
-        }
+        res.locals = req.createGoodResponse(210, 'La foto fue actualizada correctamente')
         next()
     })
 }
@@ -73,18 +62,13 @@ export function destroy(req, res, next) {
     let theUserIsNotAdmin = user.pvLvl < 2
     
     if (theUserIsNotAdmin) {
-        res.status(404)
-        res.locals = {
-            status: 'bad'
-        }
-        return next()
+        let response = req.createBadResponse(401, 'Usted no está autorizado para realizar esta acción')
+        return next(response)
     }
 
     Photo.findByIdAndRemove(req.params.id, (err, doc) => {
         fs.unlink(path.join(pathPhotos, req.params.id + '.jpg'), (err) => {
-            res.locals = {
-                status: 'ok'
-            }
+            res.locals = req.createGoodResponse(211, 'La foto fue eliminada correctamente')
             next()
         })
     })

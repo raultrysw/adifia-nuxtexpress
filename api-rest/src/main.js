@@ -6,12 +6,17 @@ import {router as ARTICLES_ROUTER, model as ARTICLES_MODEL, BASE_URL as BASE_URL
 import {router as PHOTOS_ROUTER, model as PHOTOS_MODEL, BASE_URL as BASE_URL_FOR_PHOTOS} from './concepts/photos/'
 import logFactory from './utils/log'
 
+import {createBadResponse, createGoodResponse} from './utils/response-maker.js'
+
 const {recoverUser} = require('../../utils/user-token')
 const cors = require('cors')
 const log = logFactory("ROOT APP")
 const mongoose = require('mongoose')
 
 mongoose.connect(DB_MONGO_URI, {}, upServer)
+
+express.request.__proto__.createBadResponse = createBadResponse
+express.request.__proto__.createGoodResponse = createGoodResponse
 
 function upServer(error) {
     if (error) {
@@ -42,10 +47,11 @@ function upServer(error) {
 let errorHandler = function(err, req, res, next) {
     console.log(err.stack)
     log('error', 'HUBO UN ERROR (' + err.message + ')')
-    res.locals.status = 'bad'
+    res.locals = req.createBadResponse(500, 'Hubo un error interno', {data: res.locals})
     next();
 }
 
 let endRequest = function(req, res) {
+    res.status(res.locals.status)
     res.json(res.locals)
 }

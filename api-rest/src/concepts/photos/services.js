@@ -3,27 +3,16 @@ import Member from '../members/model'
 
 export function likes(req, res, next) {
     if (!req.user) {
-        res.locals = {
-            status: 'bad'
-        }
-        return next()
+        let response = req.createBadResponse(401, 'Tienes que estar autorizado para dar like a las fotos')
+        return next(response)
     }
     const photoId = req.params.id
     const userId = req.user._id
-    console.log('recibida petición de me gusta para la foto:', photoId);
     
-    const resolve = response => {
-        console.log(response)
-        res.locals = response
-        console.log(res.locals);
-        
-        next()
-    }
-
     Photos.findById(photoId).exec((err, photo) => {
         if (err) {
-            console.log('HUBO UN ERROR',err);
-            return resolve({err})
+            let response = req.createBadResponse(500, 'Hubo un error interno')
+            return next(response)
         }
         let indexOfUser = photo.likes.indexOf(userId)
         let notLike = indexOfUser === -1
@@ -34,9 +23,8 @@ export function likes(req, res, next) {
         photo.save((err, doc) => {
             Member.findById(userId, (err, user) => {
                 if (err) {
-                    console.log(err)
-                    response.err = err
-                    resolve(response)
+                    let response = req.createBadResponse(500, 'Hubo un error interno')
+                    return next(response)
                 }
 
                 user.photos = user.photos || []
@@ -45,18 +33,21 @@ export function likes(req, res, next) {
 
                 user.save((err, user) => {
                     if (err) {
-                        console.log(err)
-                        response.err = err
-                        resolve(response)
+                        let response = req.createBadResponse(500, 'Hubo un error interno')
+                        return next(response)
                     }
 
-                    let response = {
+                    let responseData = {
                         status: 'ok',
-                        likesPhotos: photo.likes,
-                        likesUser: user.photos
+                        message: 'La foto fue actualizada correctamente',
+                        data: {
+                            likesPhotos: photo.likes,
+                            likesUser: user.photos
+                        }
                     }
-                    
-                    resolve(response)
+
+                    res.locals = req.createGoodResponse(responseData)
+                    next()
                 })
             })
         })

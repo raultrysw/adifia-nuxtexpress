@@ -97,7 +97,7 @@ export default {
             let id = this.$route.query.id
             let thereIsNoId = id === undefined
 
-            
+            this.makeRequest('/articles')
 
             let titlePage = 'Creación del artículo'
             if (thereIsNoId) {
@@ -187,34 +187,26 @@ export default {
                 let {doc, errors} = response.data
                 if (errors) this.errors = errors
                 else {
-                    console.log('Se creo el doc:', doc);
                     this.dropArticle(this.$route.query.id || 'new')
                     this.$router.push('/articles')
                     this.title = ''
                     this.body = ''
                 }
             }
-            
             let isNewPost = this.$route.query.id === undefined
             let uri = isNewPost ? URI_TO_POST_ARTICLES : this.articleRecoveryURI
             let method = isNewPost ? 'post' : 'put'
-            
             let newArticle = {
                 title: this.title,
                 body: this.body,
                 isEvent: this.isEvent
             }
-            
             if (this.isEvent) {
                 newArticle['time'] = this.time
                 newArticle['date'] = this.date
                 newArticle['story'] = this.story
                 newArticle['location'] = this.locationExtracted
             }
-
-            debugger
-
-
             let options = {headers: this.headers}
 
             this.$http[method](uri, newArticle, options).then(cb)
