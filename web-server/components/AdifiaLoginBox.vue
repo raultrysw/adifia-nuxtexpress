@@ -15,15 +15,49 @@
 <script>
 import rswForm from 'rsw-vue-components/components/RSWForm.vue'
 import rswFieldInput from 'rsw-vue-components/components/RSWFieldInput.vue'
-import {mapActions, mapState} from 'vuex'
+import {mapActions, mapState, mapMutations} from 'vuex'
+
+const LOGIN_URL = 'http://localhost:7000/api/members/login'
 
 export default {
     components: {rswForm, rswFieldInput},
-    computed: {
-        ...mapState('sessions', ['errorMessages'])
+    data() {
+        return {
+            errorMessages: []
+        }
     },
     methods: {
-        ...mapActions('sessions', ['login'])
+        login(e) {
+            let form = e.target
+            let user = {
+                email: form['email-user'].value,
+                password: form['password-user'].value
+            }
+            const self = this
+            let data = {
+                url: LOGIN_URL,
+                data: user
+            }
+
+            const cb = data => {
+                let userFound = data.user
+                const {email, name, surname, pvLvl, _id, avatar, photos, token} = userFound
+                
+                const user = {email, name, surname, pvLvl, _id, avatar, photos, token}
+                self.session(user)   
+            }
+            const errorCb = response => {
+                if (response.status === 404) {
+                    this.errorMessages = []
+                    setTimeout(() => {
+                        this.errorMessages.push('Usuario no encontrado')
+                    }, 75)
+                }
+            }
+
+            this.recover(data, 'post', cb, errorCb)
+        },
+        ...mapMutations('sessions', ['session'])
     }
 }
 </script>

@@ -1,11 +1,20 @@
 const mixin = {
     methods: {
-        makeRequest(url, data, options) {
-            let req = this.$http({
-                url
-            })
-            console.log(req);
+        recover({url, data, headers}, method, cb, errorCb) {
+            let req = this.$http[method](url, data, headers)
+            console.log('Hacienod peticion a', url);
             
+            req.then(response => {
+                debugger
+                let {data} = response
+                cb(data.data)
+            }).catch(({request, response}) => {
+                this.log(response.data.message)
+                errorCb(response.data)
+            })
+        },
+        log(message) {
+            console.log(message)
         }
     }
 }
