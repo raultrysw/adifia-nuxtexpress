@@ -1,4 +1,3 @@
-$devMode: false;
-$height-header: 50px;
-$debugging: true;
-$aside-width: 300px;
+@import './colors.scss';
+$header-height: 60px;
+$aside-max-width: 300px;

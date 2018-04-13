@@ -1,0 +1,42 @@
+.app {
+    @extend .cover-all;
+    &__header, &__aside {
+        background: white;
+    }
+    &__header {
+        @extend .fix-at-top;
+        @include my-ed-container($full: true);
+        @include crossCenter;
+        border-bottom: 1px solid;
+        height: $header-height;
+        z-index: 40;
+        @include from(xl) {
+            left: $aside-max-width;
+        }
+    }
+    &__navigator-bar {
+        margin-left: auto;
+    }
+    &__aside {
+        @extend .primary-window-content;
+        background: white;
+        top: $header-height;
+        z-index: 30;
+        @include from(m) {
+            max-width: $aside-max-width;
+            border-right: 1px solid black;
+        }
+        @include from(xl) {
+            top: 0px;
+        }
+    }
+    &__main {
+        position: absolute;
+        top: $header-height;
+        z-index: 0;
+        @include from(l) {
+            left: $aside-max-width;
+        }
+        
+    }
+}

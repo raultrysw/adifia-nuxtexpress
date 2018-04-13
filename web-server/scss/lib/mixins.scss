@@ -1,0 +1,15 @@
+@import '../node_modules/ed-grid/ed-grid.scss';
+
+@mixin my-ed-container($isEdContainer: true, $full: false) {
+    @if $isEdContainer {
+        @include edContainer;
+    }
+    @include edItem;
+    @if $full {
+        @include full;
+    }
+}
+
+@mixin make-shadow {
+    box-shadow: 0px 0px 5px 1px $main-color;
+}

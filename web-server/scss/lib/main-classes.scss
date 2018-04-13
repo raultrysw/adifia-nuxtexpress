@@ -1,0 +1,25 @@
+@import '../lib/mixins.scss';
+
+.fix-at-top {
+    position: fixed;
+    top: 0px;
+    width: 100%;
+}
+.cover-all {
+    margin: 0px;
+    padding: 0px;
+    width: 100%;
+    height: 100vh,
+}
+.primary-window-content {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+}
+
+.no-list {
+    @include edMenu(s);
+    width: initial;
+}
