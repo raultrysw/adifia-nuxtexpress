@@ -1,6 +1,6 @@
-export function createBadResponse(status, message, data) {
-    return {status, message, data}
+export function createBadResponse(status, message, items) {
+    return {status, message, items}
 }
-export function createGoodResponse(status, message, data) {
-    return {status, message, data}
+export function createGoodResponse(status, message, items) {
+    return {status, message, items}
 }

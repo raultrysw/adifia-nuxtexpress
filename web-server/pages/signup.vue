@@ -50,10 +50,19 @@ export default {
             const {name, surname, email, password} = this
             const user = {name, surname, email, password}
             
-            this.$http.post(REGISTER_URL, user).then(response => {
-                if (response.data.status === 'ok') this.$router.push('/')
-                else this.errors = response.data.errors;
-            })
+            let url = REGISTER_URL
+            let data = user
+
+            this.makeRequest({url, data}, 'post',
+                this.redirect.bind(this),
+                this.logErrors.bind(this)
+            )
+        },
+        redirect(response) {
+            this.$router.push('/');
+        },
+        logErrors({errors}) {
+            this.errors = errors;
         }
     }
 }

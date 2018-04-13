@@ -10,22 +10,24 @@ export function create(req, res, next) {
     const {name, surname, email, password} = req.body
     log('debug', 'Creando el usuario: ' + email)
     const member = new Member({name, surname, email, password})
+
+    const {ERROR_CODES, createBadResponse, createGoodResponse} = req
+
     member.save(member, (err, member) => {
         res.status(200)
         if (err) {
             let isDuplicated = err.code === DUPLICATE_ERROR_CODE
-            let response = null
 
             if (isDuplicated) 
-                response = createBadResponse(209, 'Ya hay un usuario con el mismo correo')
+                res.locals = createBadResponse(ERROR_CODES.BAD_MAKED_DOCUMENT, 'Ya hay un usuario con el mismo correo')
             else {
+                res.locals = createBadResponse(ERROR_CODES.BAD_MAKED_DOCUMENT, 'Hay varios errores en el documento', {errors: getMongoDocumentErrors(err)})
                 res.locals.errors = getMongoDocumentErrors(err);
-                response = createBadResponse(209, 'Hay varios errores en el documento', {errors: getMongoDocumentErrors(err)})
             }
 
             next()
         } else {
-            res.locals = req.createGoodResponse(201, 'Te has registrado correctamente', {member})
+            res.locals = createGoodResponse(ERROR_CODES.CREATED_DOCUMENT, 'Te has registrado correctamente', {member})
             next()
         }
     })

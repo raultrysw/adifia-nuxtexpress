@@ -8,6 +8,8 @@ import logFactory from './utils/log'
 
 import {createBadResponse, createGoodResponse} from './utils/response-maker.js'
 
+import ERROR_CODES from './error-codes.js';
+
 const {recoverUser} = require('../../utils/user-token')
 const cors = require('cors')
 const log = logFactory("ROOT APP")
@@ -17,6 +19,7 @@ mongoose.connect(DB_MONGO_URI, {}, upServer)
 
 express.request.__proto__.createBadResponse = createBadResponse
 express.request.__proto__.createGoodResponse = createGoodResponse
+express.request.__proto__.ERROR_CODES = ERROR_CODES
 
 function upServer(error) {
     if (error) {
