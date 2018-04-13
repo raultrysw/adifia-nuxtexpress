@@ -27,8 +27,8 @@ export function retrieve(req, res, next) {
     let query = filterFor(req)
     
     query.exec((err, photos) => {
-        res.status(200)
         if (err) {
+            console.log(err)
             let response = req.createBadResponse(500, 'Ha habido un error interno', {})
             res.locals.errors = err
             return next(response)

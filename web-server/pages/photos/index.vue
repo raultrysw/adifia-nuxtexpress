@@ -29,9 +29,7 @@ export default {
     created() {
         this.$store.commit('context', {title:'Foto denuncia', bar: 'photo'})
         const {headers} = this
-        axios.get(URI_PHOTO_RECOVERY).then(response => {
-            this.photos = response.data.docs
-        })
+        this.reloadAll()
     },
     computed: {
         ...mapState('photos', ['viewAll']),
@@ -52,9 +50,14 @@ export default {
         reloadAll() {
             this.photos = []
             debugger
+            this.makeRequest({url: this.URL}, 'get',
+                ({photos}) => this.photos = photos,
+                ({errors}) => console.log('Han habido algunos errores', errors)
+                )
+            /*debugger
             this.$http.get(this.URL).then(response => {
                 this.photos = response.data.docs
-            })
+            })*/
         }
     }
 }

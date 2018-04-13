@@ -4,6 +4,7 @@ import {photosValid, limitTo, sortByLikes} from './filters'
 
 function buildQuery({notPutAll, limit, sortingByLikes}) {
     let query = Photo.aggregate()
+    query.match({})
 
     let filters = [
         [notPutAll, photosValid()],
