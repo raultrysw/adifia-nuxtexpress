@@ -12,13 +12,19 @@ let URI_TO_ARTICLES = '/articles/:id'
 export default {
     components: {AdifiaArticle},
     mounted() {
-        this.$http.get(this.uriArticle).then(response => {
-            this.article = response.data.article
+        const payload = {url: this.uriArticle}
+        this.makeRequest(payload, 'get', this.setArticle.bind(this), this.logError.bind(this))
+    },
+    methods: {
+        setArticle({article}) {
+            this.article = article
             let title = 'Blog - ' + this.article.title
-
             this.$store.commit('context', {title, bar: ''})
             this.loaded = true
-        })
+        },
+        logError({errors}) {
+            console.log(errors)
+        }
     },
     computed: {
         uriArticle() {

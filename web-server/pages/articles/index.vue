@@ -32,18 +32,17 @@ export default {
     ...mapGetters("sessions", ["isVocal"])
   },
   mounted() {
-    debugger
-    this.$http.get(URI_ARTICLES_GET).then(response => {
-        let { articles } = response.data;
-        this.articles = articles;
-        this.loaded = true;
-
-    })
-    // this.$http.get(URI_ARTICLES_GET).then(response => {
-    // })
+    let payload = {url: URI_ARTICLES_GET}
+    this.makeRequest(payload, 'get', this.fillArticles.bind(this), this.logErrors.bind(this))
   },
-  mehtods: {
-    ...mapActions("articles", ["getArticles"])
+  methods: {
+    fillArticles({articles}) {
+      this.articles = articles
+      this.loaded = true
+    },
+    logErrors({errors}) {
+      console.log(errors)
+    }
   }
 };
 </script>

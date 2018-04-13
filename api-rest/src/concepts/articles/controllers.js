@@ -26,16 +26,17 @@ export function create(req, res, next) {
     
     let article = new Article(req.body)
 
+    const {createBadResponse, createGoodResponse} = req
+
     Member.findOne({email}, (err, userWriting) => {
         article.author = userWriting
 
         article.save((err, doc) => {
-            res.status(200)
             if (err) {
                 let message = `Hay ${Object.keys(err.errors).length} error en el documento de member`
                 log('debug', message)
                 res.locals.errors = getMongoDocumentErrors(err);
-                let response = req.createBadResponse(209, message, {})
+                let response = createBadResponse(209, message, {})
                 next(response)
             } else {
                 res.locals = createGoodResponse(201, 'El artículo fue creado correctamente', {articleId: article._id})

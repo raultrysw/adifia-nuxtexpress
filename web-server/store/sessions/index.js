@@ -35,8 +35,7 @@ let mutations = {
         
         state.logged = true
         state.user = user
-        localStorage.setItem('jwt-token', user.token)
-        
+        localStorage.setItem('jwt-token', user.token)        
     }
 }
 

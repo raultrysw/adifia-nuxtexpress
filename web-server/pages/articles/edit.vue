@@ -1,29 +1,29 @@
 <template>
     <rsw-form class="form-article" v-if="show" :submitHandler="submitArticle" submitText="Enviar artículo" :errors="errors">
         <rsw-field-group-input class="form-article__title" title="Título del artículo">
-            <rsw-field-input :value="title" v-model="title" description="Pon el título del artículo" />
+            <rsw-field-input :value="title" v-model="article.title" description="Pon el título del artículo" />
         </rsw-field-group-input>
-        <editor class="form-article__body" :init="initmce" v-model="body" />
-        <rsw-toggle-input :state="isEvent" v-model="isEvent">Es un evento</rsw-toggle-input>
-        <div v-if="isEvent" class="form-article-event form-article-event__zone">
+        <editor class="form-article__body" :init="initmce" v-model="article.body" />
+        <rsw-toggle-input :state="article.isEvent" v-model="article.isEvent">Es un evento</rsw-toggle-input>
+        <div v-if="article.isEvent" class="form-article-event form-article-event__zone">
             <h2>Información del evento</h2>
             <div class="main-start">
                 <div class="form-article-event__location">
-                    <rsw-location-picker height="10em" :lat="lat" :lng="lng" :text="text" v-model="location" title="Lugar del evento" />
+                    <rsw-location-picker height="10em" :lat="article.lat" :lng="article.lng" :text="text" v-model="article.location" title="Lugar del evento" />
                 </div>
                 <div class="form-article-event__date-time">
                     <rsw-field-group-input title="Datos básicos del evento" vertical="true">
                         <rsw-field-input class="form-article-event__date" text="Dia">
-                            <input v-model="date" type="date" />
+                            <input v-model="article.date" type="date" />
                         </rsw-field-input>
                         <rsw-field-input class="form-article-event__time" text="Hora">
-                            <input  v-model="time" type="time" />
+                            <input  v-model="article.time" type="time" />
                         </rsw-field-input>
                     </rsw-field-group-input>
                 </div>
             </div>
             <rsw-field-input class="form-article-event__story" text="story">
-                <textarea class="form-article-event__story-frame" v-model="story"></textarea>
+                <textarea class="form-article-event__story-frame" v-model="article.story"></textarea>
             </rsw-field-input>
         </div>
     </rsw-form>
@@ -82,14 +82,18 @@ export default {
             initmce: init,
             show: false,
             errors: [],
-            isEvent: false,
-            time: '',
-            date: '',
-            story: '',
-            location: '',
+            text: '',
             lat: 38.3459963,
             lng: -0.4906855,
-            text: ''
+            article: {
+                isEvent: false,
+                title: '',
+                body: '',
+                time: '',
+                date: '',
+                story: '',
+                location: '',
+            }
         }
     },
     created() {
@@ -97,7 +101,9 @@ export default {
             let id = this.$route.query.id
             let thereIsNoId = id === undefined
 
-            this.makeRequest('/articles')
+            // this.makeRequest('/articles')
+
+            const {DiaryPage} = this.prototypes
 
             let titlePage = 'Creación del artículo'
             if (thereIsNoId) {
@@ -105,20 +111,18 @@ export default {
                 this.$store.commit('context', {title: titlePage, bar: ''})
                 this.restoreArticle(id || 'new')
             } else {
-                this.axios.get(this.articleRecoveryURI).then(response => {
-                    const {title, body, isEvent, time, date, story, location} = response.data.article
-                    titlePage = 'Editando el artículo `' + title + '`'
-                    this.locationEvent = location
-                    this.setLocation()
-                    this.title = title
-                    this.body = body
-                    this.$store.commit('context', {title: titlePage, bar: ''})
-                    this.isEvent = isEvent
-                    this.time = time
-                    this.date = date
-                    this.story = story
-                    this.show = true
-                })
+                this.makeRequest({url: this.articleRecoveryURI}, 'get',
+                    ({article}) => {
+                        console.log('Articulo recuperado', article);
+                        this.article = new DiaryPage(article)
+                        this.show = true
+                        titlePage = 'Editando el artículo `' + article.title + '`'
+                        this.$store.commit('context', {title: titlePage, bar: ''})
+                    },
+                    ({errors}) => {
+                        console.log('Han habido varios errores')
+                    }
+                    )
             }
 
         } else {
@@ -141,19 +145,18 @@ export default {
         articleRecoveryURI() {
             return '/articles/' + this.$route.query.id
         },
-        title: {
-            get() {return this.$store.state.articles.newArticle.title},
-            set(value) {
-                if (!this.$route.query.id) this.saveInLocal('title', value)
-                this.$store.state.articles.newArticle.title = value
-            },
+        uriToThisArticle() {
+            let isNewPost = this.$route.query.id === undefined,
+                url = isNewPost ? URI_TO_POST_ARTICLES : this.articleRecoveryURI,
+                method = isNewPost ? 'post' : 'put';
+            return [url, method]
         },
-        body: {
-            get() {return this.$store.state.articles.newArticle.body},
-            set(value) {
-                if (!this.$route.query.id) this.saveInLocal('body', value)
-                this.$store.state.articles.newArticle.body = value
-            },
+        payload() {
+            const {DiaryPage} = this.prototypes
+            const [url, method] = this.uriToThisArticle, data = new DiaryPage(this.article),
+                options = {headers: this.headers}
+            const payload = {url, data, options}
+            return [payload, method]
         }
     },
     methods: {
@@ -170,9 +173,9 @@ export default {
             this.title = article['title']
             this.body = article['body']
         },
-        dropArticle(id) {
+        dropArticle() {
             let localArticles = JSON.parse(localStorage.getItem('savedArticles'))
-            localArticles[id] = {}
+            localArticles.new = {}
             localStorage.setItem('savedArticles', JSON.stringify(localArticles))
         },
         setLocation() {
@@ -183,33 +186,18 @@ export default {
             this.text = text
         },
         submitArticle() {
-            const cb = response => {
-                let {doc, errors} = response.data
-                if (errors) this.errors = errors
-                else {
-                    this.dropArticle(this.$route.query.id || 'new')
-                    this.$router.push('/articles')
-                    this.title = ''
-                    this.body = ''
-                }
-            }
-            let isNewPost = this.$route.query.id === undefined
-            let uri = isNewPost ? URI_TO_POST_ARTICLES : this.articleRecoveryURI
-            let method = isNewPost ? 'post' : 'put'
-            let newArticle = {
-                title: this.title,
-                body: this.body,
-                isEvent: this.isEvent
-            }
-            if (this.isEvent) {
-                newArticle['time'] = this.time
-                newArticle['date'] = this.date
-                newArticle['story'] = this.story
-                newArticle['location'] = this.locationExtracted
-            }
-            let options = {headers: this.headers}
-
-            this.$http[method](uri, newArticle, options).then(cb)
+            const [payload, method] = this.payload
+            debugger
+            this.makeRequest(payload, method, this.redirect.bind(this), this.logErrors.bind(this))
+        },
+        redirect() {
+            this.title = ''
+            this.body = ''
+            this.dropArticle()
+            this.$router.push('/profile')
+        },
+        logErrors({errors}) {
+            this.errors = errors
         }
     }
 }
