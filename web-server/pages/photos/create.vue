@@ -42,7 +42,6 @@ export default {
           title: '',
           email: '',
           description: '',
-          address: '',
           file: null,
           errors: [],
           location: null,
@@ -76,11 +75,20 @@ export default {
                 
                 return
             }
-            const {title, email, address} = this
-
+            const {Photo} = this.prototypes, email = (this.user && this.user.email) || email;
+            const data = new Photo(this, email).toFData()
+            this.makeRequest({url: URI_PHOTO_CREATE, data}, 'post',
+                ({photo}) => {
+                    console.log(photo)
+                },
+                ({errors}) => {
+                    console.log(errors)
+                }
+            )
+/*
             let fd = new FormData()
             fd.append('title', title)
-            fd.append('email', (this.user && this.user.email) || email)
+            fd.append('email', )
             fd.append('address', address)
             fd.append('photo', this.file)
             fd.append('description', this.description)
@@ -88,7 +96,7 @@ export default {
             
             this.$http.post(URI_PHOTO_CREATE, fd).then(response => {
                 this.$router.push('/photos')
-            })
+            })*/
         },
         updateImage(file, img) {
             this.file = file
