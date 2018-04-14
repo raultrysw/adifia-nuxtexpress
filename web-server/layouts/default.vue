@@ -3,7 +3,9 @@
     <adifia-header class="app__header" v-model="showingAside"/>
     <adifia-aside @close="() => showingAside = false" v-if="showAside"/>
     <main class="app__main">
-      <section class="app__main-content" is="nuxt"></section>
+      <transition name="fadeIn">
+        <section class="app__main-content" is="nuxt"></section>
+      </transition>
     </main> 
   </div>
 </template>

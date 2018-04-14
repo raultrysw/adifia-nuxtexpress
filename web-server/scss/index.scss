@@ -2,13 +2,16 @@
 @import "./components/index.scss";
 @import './forms/index.scss';
 @import './pages/index.scss';
+@import '../node_modules/vue-animate-transitions/dist/vue-animate-transitions.min.css';
 
 *:not(ul):not(ol) {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
-
+form {
+    overflow: hidden;
+}
 table {
     width: 100%;
     font-size: 1.1em;

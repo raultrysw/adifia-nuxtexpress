@@ -15,12 +15,15 @@
                     <option value="2">Usuarios</option>
                 </select>
             </div>
-            <div class="profile-page__section--management__articles" v-if="optionChoosen === '1'">
-                <adifia-articles-management v-if="isVocal" />
-            </div>
-            <div class="profile-page__section--management__users" v-if="optionChoosen === '2'">
-                <adifia-memebers-management v-if="isAdmin" />
-            </div>
+            <transition name="fadeInDown" mode="out-in" appear>
+              <div class="profile-page__section--management__articles" key="a" v-if="optionChoosen === '1'">
+                  <adifia-articles-management v-if="isVocal" />
+              </div>
+              <div class="profile-page__section--management__users" key="n" v-else-if="optionChoosen === '2'">
+                  <adifia-memebers-management v-if="isAdmin" />
+              </div>
+              <div v-else></div>
+            </transition>
         </div>
         <div class="profile-page__section--private-actions" v-else>
             <h3>Eeres socio</h3>

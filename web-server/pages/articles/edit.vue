@@ -5,27 +5,29 @@
         </rsw-field-group-input>
         <editor class="form-article__body" :init="initmce" v-model="article.body" />
         <rsw-toggle-input :state="article.isEvent" v-model="article.isEvent">Es un evento</rsw-toggle-input>
-        <div v-if="article.isEvent" class="form-article-event form-article-event__zone">
-            <h2>Información del evento</h2>
-            <div class="main-start">
-                <div class="form-article-event__location">
-                    <rsw-location-picker height="10em" :lat="article.lat" :lng="article.lng" :text="text" v-model="article.location" title="Lugar del evento" />
+        <transition name="slideInDown">
+            <div v-if="article.isEvent" class="form-article-event form-article-event__zone">
+                <h2>Información del evento</h2>
+                <div class="main-start">
+                    <div class="form-article-event__location">
+                        <rsw-location-picker height="10em" :lat="article.lat" :lng="article.lng" :text="text" v-model="article.location" title="Lugar del evento" />
+                    </div>
+                    <div class="form-article-event__date-time">
+                        <rsw-field-group-input title="Datos básicos del evento" vertical="true">
+                            <rsw-field-input class="form-article-event__date" text="Dia">
+                                <input v-model="article.date" type="date" />
+                            </rsw-field-input>
+                            <rsw-field-input class="form-article-event__time" text="Hora">
+                                <input  v-model="article.time" type="time" />
+                            </rsw-field-input>
+                        </rsw-field-group-input>
+                    </div>
                 </div>
-                <div class="form-article-event__date-time">
-                    <rsw-field-group-input title="Datos básicos del evento" vertical="true">
-                        <rsw-field-input class="form-article-event__date" text="Dia">
-                            <input v-model="article.date" type="date" />
-                        </rsw-field-input>
-                        <rsw-field-input class="form-article-event__time" text="Hora">
-                            <input  v-model="article.time" type="time" />
-                        </rsw-field-input>
-                    </rsw-field-group-input>
-                </div>
+                <rsw-field-input class="form-article-event__story" text="story">
+                    <textarea class="form-article-event__story-frame" v-model="article.story"></textarea>
+                </rsw-field-input>
             </div>
-            <rsw-field-input class="form-article-event__story" text="story">
-                <textarea class="form-article-event__story-frame" v-model="article.story"></textarea>
-            </rsw-field-input>
-        </div>
+        </transition>
     </rsw-form>
 </template>
 
