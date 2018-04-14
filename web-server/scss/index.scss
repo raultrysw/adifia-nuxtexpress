@@ -1,7 +1,44 @@
 @import './variables.scss';
 @import "./components/index.scss";
+@import './forms/index.scss';
+@import './pages/index.scss';
 
 *:not(ul):not(ol) {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
+}
+
+table {
+    width: 100%;
+    font-size: 1.1em;
+    background: lightgrey;
+    border-collapse: collapse;
+    & th, & td {
+        border: 1px solid black;
+    }
+    & td {
+        &:last-child {
+            text-align: right;
+        }
+    }
+    & thead {
+        font-size: 1.2em;
+        color: white;
+        background: darkgrey;
+    }
+}
+.table-view {
+    display: table;
+    border-spacing: 1em .3em;
+    & > * {
+        display: table-row;
+        & > * {
+            display: table-cell;
+            &:first-child {
+                text-align: right;
+                font-weight: bold;
+            }
+        }
+    }
 }

@@ -1,0 +1,48 @@
+.adifia-slider {
+    display: block;
+    @include from(xl) {
+        width: 60%;
+        margin: 0 auto;
+    }
+    &__slide:not(:last-child) {
+        border-bottom: 1px solid;
+    }
+    & .slide__title {
+        cursor: pointer;
+        font-size: 1.2em;
+        text-align: center;
+    }
+    & .slide__content {
+        border-top: 1px solid;
+        @include from(xl) {
+            height: 150px;
+        }
+        @include from(m) {
+            padding: .5em;
+        }
+        @include to(m) {
+            height: 200px;
+        }
+    }
+    &__slide {
+        border: 1px solid;
+        @include from(m) {
+            display: none;
+            &.active {
+                display: block;
+                color: blue;
+            }
+        }
+        @include to(m) {
+            &:not(:last-child) {
+                border-bottom: none;
+            }
+            & .slide__content {
+                display: none;
+            }
+            &.active .slide__content {
+                display: block;
+            }
+        }
+    }
+}

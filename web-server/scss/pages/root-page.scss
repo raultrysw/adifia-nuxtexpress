@@ -1,0 +1,11 @@
+.root-page {
+    &__section {
+        &--photos {
+            @include mainStart;
+            @include flexColumn;
+            & > .gallery {
+                @include grid('.photo', 1 1 2 4);
+            }
+        }
+    }
+}

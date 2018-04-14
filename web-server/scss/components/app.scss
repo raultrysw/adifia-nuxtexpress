@@ -29,14 +29,28 @@
         @include from(xl) {
             top: 0px;
         }
+        & > .app__navigator-bar {
+            border-width: 1px 0px;
+            border-style: solid;
+        }
     }
     &__main {
         position: absolute;
         top: $header-height;
         z-index: 0;
+        right: 0px;
+        left: 0px;
+        &-content {
+            padding-top: 20px;
+            max-width: 90%;
+            margin: 0 auto;
+        }
         @include from(l) {
             left: $aside-max-width;
         }
         
+    }
+    &__title-box {
+        text-align: center;
     }
 }
