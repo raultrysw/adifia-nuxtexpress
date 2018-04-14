@@ -9,6 +9,8 @@ const pathM = require('path')
 const gm = require('gm').subClass({imageMagick: false});
 const log = logFactory("EN MEMBERS SERVICES")
 
+const PATH_TO_AVATARS = 'http://localhost:7000/assets/img/avatars'
+
 export function normalizeAvatarImage(req, res, next) {
     const {path, destination} = req.file;
 
@@ -19,13 +21,14 @@ export function normalizeAvatarImage(req, res, next) {
 
     let finalPath = pathM.join(destination, newFileName)
     log('debug', 'Escribiendo imagen en: ' + finalPath)
-    gm(path).resize(400, 600).write(filename, (err) => {
+    gm(path).resize(400, 600).write(finalPath, (err) => {
         if (err) {
             let response = req.createBadResponse(500, 'Hubo un error interno')
             res.locals.errors = err
             return next(response)
         }
         fs.unlink(path, (err) => {
+            let filename = pathM.join(PATH_TO_AVATARS, newFileName)
             res.locals = req.createGoodResponse(201, 'Avatar creado correctamente', {filename})
             next()
         })

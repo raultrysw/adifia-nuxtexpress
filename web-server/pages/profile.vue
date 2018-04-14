@@ -28,54 +28,67 @@
     </section>
 </template>
 <script>
-import {mapGetters, mapState} from 'vuex'
+import { mapGetters, mapState } from "vuex";
 
-import AdifiaArticlesManagement from '~/components/AdifiaArticlesManagement'
-import AdifiaMemebersManagement from '~/components/AdifiaMembersManagement'
+import AdifiaArticlesManagement from "~/components/AdifiaArticlesManagement";
+import AdifiaMemebersManagement from "~/components/AdifiaMembersManagement";
 
-import rswLivePreviewImage from 'rsw-vue-components/components/RSWLivePreviewImage.vue'
+import rswLivePreviewImage from "rsw-vue-components/components/RSWLivePreviewImage.vue";
 
-const MEMBERS_URI = '/members/serv/avatar'
+const MEMBERS_URI = "/members/serv/avatar";
 
 export default {
-    components: {AdifiaArticlesManagement, rswLivePreviewImage, AdifiaMemebersManagement},
-    data() {
-        return {
-            showui: false,
-            articles: [],
-            reloadedFirstTime: false,
-            optionChoosen: '1',
-            avatarUrl: ''
-        }
-    },
-    mounted() {
-        if (!this.$store.state.sessions.logged) {
-            return this.$router.push('/')
-        }
-        this.$store.commit('context', {title: 'Tu página privada', bar: ''})
-        this.showui = true
-
-        this.avatarUrl = this.user.avatar ? 'http://localhost:7000/assets/img/avatars/' + this.user._id + '.png' : 'http://localhost:7000/assets/img/avatars/default.png'
-        
-    },
-    methods: {
-        pushImage(file, data) {
-            let formData = new FormData()
-            formData.append('avatar', file)
-
-            this.$http.put(MEMBERS_URI, formData, {headers: this.$store.getters.headers}).then(response => {
-                this.$store.state.sessions.user.avatar = true
-
-                this.$store.dispatch('saveToken')
-                this.avatarUrl = data
-            })
-        },
-        
-    },
-    computed: {
-        ...mapState('sessions', ['user']),
-        ...mapGetters('sessions', ['isVocal', 'isAdmin', 'avatarUrl']),
-        ...mapGetters(['headers'])
+  components: {
+    AdifiaArticlesManagement,
+    rswLivePreviewImage,
+    AdifiaMemebersManagement
+  },
+  data() {
+    return {
+      showui: false,
+      articles: [],
+      reloadedFirstTime: false,
+      optionChoosen: "1",
+      avatarUrl: "",
+      data: null
+    };
+  },
+  mounted() {
+    if (!this.$store.state.sessions.logged) {
+      return this.$router.push("/");
     }
-}
+    this.$store.commit("context", { title: "Tu página privada", bar: "" });
+    this.showui = true;
+
+    this.avatarUrl = this.user.avatar
+      ? "http://localhost:7000/assets/img/avatars/" + this.user._id + ".png"
+      : "http://localhost:7000/assets/img/avatars/default.png";
+  },
+  methods: {
+    pushImage(file, dataB64) {
+      let data = new FormData();
+      data.append("avatar", file);
+      let options = { headers: this.$store.getters.headers };
+
+      this.data = dataB64;
+
+      this.makeRequest(
+        { url: MEMBERS_URI, data, options },
+        "put",
+        this.updateAvatarInfo.bind(this),
+        ({ errors }) => console.log(errors)
+      );
+    },
+    updateAvatarInfo(response) {
+      this.$store.state.sessions.user.avatar = true;
+      this.$store.dispatch("saveToken");
+      this.avatarUrl = this.data;
+    }
+  },
+  computed: {
+    ...mapState("sessions", ["user"]),
+    ...mapGetters("sessions", ["isVocal", "isAdmin", "avatarUrl"]),
+    ...mapGetters(["headers"])
+  }
+};
 </script>

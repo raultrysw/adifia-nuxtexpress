@@ -67,11 +67,18 @@ export default {
           }
       },
       reloadChanges(cb) {
-          this.articles = []
-          this.$http.get(this.ARTICLES_URI).then(response => {
-              this.articles = response.data.articles
-              cb();
-          })
+            this.articles = []
+            this.makeRequest({url: this.ARTICLES_URI}, 'get',
+                ({articles}) => {
+                    this.articles = articles
+                    cb();
+                },
+                ({errors}) => console.log(errors)
+            )
+        //   this.$http.get(this.ARTICLES_URI).then(response => {
+        //       this.articles = response.data.articles
+        //       cb();
+        //   })
         }
   },
   computed: {

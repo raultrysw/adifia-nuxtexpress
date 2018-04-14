@@ -25,10 +25,14 @@ export default {
         }
     },
   mounted() {
-      this.$http.get(MEMBERS_URI).then(response => {
-          const {users} = response.data
-          this.members = users
-      })
+      this.makeRequest({url: MEMBERS_URI}, 'get',
+        ({users}) => {
+            this.members = users
+        },
+        ({errors}) => {
+            console.log(errors)
+        }
+      )
   }
 }
 </script>

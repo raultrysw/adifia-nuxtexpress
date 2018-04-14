@@ -51,7 +51,7 @@ export function retrieve(req, res, next) {
             let {name, surname, email, pvLvl, _id} = doc
             return {name, surname, email, pvLvl, _id}
         })
-        res.locals = req.createGoodResponse(200, 'Los artículos fueron recuperados correctamente')
+        res.locals = req.createGoodResponse(200, 'Los artículos fueron recuperados correctamente', {users})
         next();
     })
 }
